@@ -3,6 +3,12 @@ project("vulkan-shaders-gen" C CXX)
 
 find_package (Threads REQUIRED)
 
+# [zh-build] Android NDK 自带 glslc 不支持 GL_KHR_cooperative_matrix，
+# 且生成阶段固定 --target-env=vulkan1.2，这里强制关闭 coopmat 变体。
+set(GGML_VULKAN_COOPMAT_GLSLC_SUPPORT OFF)
+set(GGML_VULKAN_COOPMAT2_GLSLC_SUPPORT OFF)
+set(GGML_VULKAN_COOPMAT2_DECODE_VECTOR_GLSLC_SUPPORT OFF)
+
 if (GGML_VULKAN_COOPMAT_GLSLC_SUPPORT)
     add_compile_definitions(GGML_VULKAN_COOPMAT_GLSLC_SUPPORT)
     message(STATUS "Enabling coopmat glslc support")
