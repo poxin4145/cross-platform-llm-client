@@ -75,7 +75,10 @@ android {
                     "-DANDROID_STL=c++_shared",
                     "-DANDROID_ARM_NEON=ON",
                     "-DGGML_CPU_AARCH64=ON",
-                    "-DGGML_OPENMP=OFF"
+                    "-DGGML_OPENMP=OFF",
+                    // [zh-build] CI 里 NDK glslc 编不过 llama.cpp 的 coopmat 着色器。
+                    // 原生库最终会用作者原版 APK 里的，所以这里不编 Vulkan。
+                    "-DLLAMA_ANDROID_VULKAN=OFF"
                 )
             }
         }
