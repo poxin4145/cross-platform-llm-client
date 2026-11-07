@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
@@ -52,6 +54,21 @@ jobs:
 
       - name: Build release APK (arm64)
         run: flutter build apk --release --target-platform android-arm64
+
+
+      # 把中文 libapp.so 推到 dist 分支，方便只取这 10MB 而不是整个 APK
+      - name: Publish libapp.so to dist branch
+        run: |
+          mkdir -p dist
+          unzip -o -q build/app/outputs/flutter-apk/app-release.apk lib/arm64-v8a/libapp.so -d dist
+          mv dist/lib/arm64-v8a/libapp.so dist/libapp.so
+          git config user.email "ci@local"
+          git config user.name "ci"
+          git checkout --orphan dist-tmp
+          git rm -rf --cached . > /dev/null
+          git add -f dist/libapp.so
+          git commit -q -m "dist: libapp.so $(date -u +%FT%TZ)"
+          git push -f origin HEAD:dist
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
