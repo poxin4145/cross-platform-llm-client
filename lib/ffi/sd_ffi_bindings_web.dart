@@ -72,9 +72,9 @@ extension BackendExtension on Backend {
       case Backend.cpu:
         return 'CPU';
       case Backend.vulkan:
-        return 'Vulkan (GPU)';
+        return 'Vulkan（GPU）';
       case Backend.opencl:
-        return 'OpenCL (GPU)';
+        return 'OpenCL（GPU）';
     }
   }
 

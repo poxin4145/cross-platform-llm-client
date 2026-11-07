@@ -152,11 +152,11 @@ class CloudService extends GetxService {
               messages, imageBase64, temperature, maxTokens);
       }
     } on TimeoutException {
-      Get.find<AppLogService>().warning('Cloud API request timed out');
+      Get.find<AppLogService>().warning('云 API 请求超时');
       return "ERROR: $_providerLabel didn't respond in time. Check your "
           'connection and try again.';
     } catch (e) {
-      Get.find<AppLogService>().error('Cloud API request failed', details: e);
+      Get.find<AppLogService>().error('云 API 请求失败', details: e);
       return 'ERROR: Cloud API request failed — $e';
     }
   }
@@ -212,7 +212,7 @@ class CloudService extends GetxService {
     if (_provider == 'openrouter') {
       return const {
         'HTTP-Referer': 'https://ai-chat.local',
-        'X-Title': 'AI Chat',
+        'X-Title': '对话',
       };
     }
     return const {};
@@ -498,7 +498,7 @@ class CloudService extends GetxService {
       maxTokens: maxTokens,
       extraHeaders: const {
         'HTTP-Referer': 'https://ai-chat.local',
-        'X-Title': 'AI Chat',
+        'X-Title': '对话',
       },
     );
   }

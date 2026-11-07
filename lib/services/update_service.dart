@@ -159,7 +159,7 @@ class UpdateService extends GetxService with WidgetsBindingObserver {
       state.value = UpdateState.idle;
       if (manual) {
         showToast('Couldn\'t check for updates',
-            'Check your connection and try again.',
+            '请检查网络后重试。',
             tone: ToastTone.error);
       }
       return null;
@@ -285,7 +285,7 @@ class UpdateService extends GetxService with WidgetsBindingObserver {
       unawaited(_installDownloaded(filename));
     } else if (status.startsWith('Update failed')) {
       _downloadId = null;
-      _fail('The download failed. Try again.');
+      _fail('下载失败，请重试。');
     } else if (status == 'Update cancelled') {
       _downloadId = null;
       if (state.value == UpdateState.downloading) {

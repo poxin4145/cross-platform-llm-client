@@ -478,7 +478,7 @@ class InferenceEngine {
       if (!completed) {
         final partial = buffer.toString();
         finish(partial.isEmpty
-            ? 'ERROR: Generation timed out.'
+            ? '错误：生成超时。'
             : '$partial$_timeLimitNote');
       }
     });
@@ -589,7 +589,7 @@ class InferenceEngine {
 
       _idleTimer = Timer(const Duration(seconds: 90), () {
         if (tokenCount == 0) {
-          finish('ERROR: LiteRT-LM multimodal model did not respond.');
+          finish('错误：LiteRT-LM 多模态模型无响应。');
         }
       });
 
@@ -597,7 +597,7 @@ class InferenceEngine {
         if (!completed) {
           final partial = buffer.toString();
           finish(partial.isEmpty
-              ? 'ERROR: LiteRT-LM multimodal generation timed out.'
+              ? '错误：LiteRT-LM 多模态生成超时。'
               : '$partial$_timeLimitNote');
         }
       });
@@ -647,7 +647,7 @@ class InferenceEngine {
 
     _idleTimer = Timer(const Duration(seconds: 60), () {
       if (tokenCount == 0) {
-        finish('ERROR: LiteRT-LM model did not respond. Try a smaller model.');
+        finish('错误：模型无响应，请换更小的模型。');
       }
     });
 
@@ -655,7 +655,7 @@ class InferenceEngine {
       if (!completed) {
         final partial = buffer.toString();
         finish(partial.isEmpty
-            ? 'ERROR: LiteRT-LM generation timed out.'
+            ? '错误：LiteRT-LM 生成超时。'
             : '$partial$_timeLimitNote');
       }
     });

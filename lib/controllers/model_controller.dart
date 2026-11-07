@@ -401,14 +401,14 @@ class ModelController extends GetxController {
 
   String _formatModelSize(String filename) {
     final bytes = fileSizes[filename] ?? 0;
-    if (bytes <= 0) return 'Local File';
+    if (bytes <= 0) return '本地文件';
     return DownloadService.formatBytes(bytes);
   }
 
   Future<void> downloadModel(AiModel model) async {
     if (externalDownloadId.value != null &&
         importFileName.value == model.filename) {
-      showToast('Already downloading',
+      showToast('正在下载',
           'This model is downloading to your Downloads folder. Wait for it to finish first.',
           tone: ToastTone.warning);
       return;
@@ -427,8 +427,8 @@ class ModelController extends GetxController {
       );
       await refreshDownloaded();
     } catch (e) {
-      Get.find<AppLogService>().error('Model download failed', details: e);
-      showToast('Download Failed', '$e', tone: ToastTone.error);
+      Get.find<AppLogService>().error('模型下载失败', details: e);
+      showToast('下载失败', '$e', tone: ToastTone.error);
     }
   }
 
@@ -450,7 +450,7 @@ class ModelController extends GetxController {
         if (result != null) saved.add(result);
       } on PlatformException catch (e) {
         Get.find<AppLogService>().error('Save to Downloads failed', details: e);
-        showToast('Not saved', e.message ?? 'Could not save $name.',
+        showToast('未保存', e.message ?? 'Could not save $name.',
             tone: ToastTone.error);
         return;
       }
@@ -473,20 +473,20 @@ class ModelController extends GetxController {
           url: model.mmprojUrl, filename: model.mmprojFilename);
     } catch (e) {
       Get.find<AppLogService>()
-          .error('Vision file download failed', details: e);
+          .error('视觉文件下载失败', details: e);
     }
   }
 
   Future<void> downloadModelToDownloads(AiModel model) async {
     if (model.url.trim().isEmpty) {
-      showToast('Download Unavailable', 'This model has no download URL.',
+      showToast('无法下载', '该模型没有下载地址。',
           tone: ToastTone.warning);
       return;
     }
 
     if (!Platform.isAndroid) {
       showToast(
-        'Android Only',
+        '仅 Android',
         'Use the app download button or import a local model on this platform.',
         tone: ToastTone.info,
       );
@@ -496,8 +496,8 @@ class ModelController extends GetxController {
     // Both downloads report progress under the same filename; running them
     // together mixes up their progress.
     if (isDownloadingModel(model.filename)) {
-      showToast('Already downloading',
-          'Wait for the in-app download of this model to finish first.',
+      showToast('正在下载',
+          '请先等待该模型在应用内下载完成。',
           tone: ToastTone.warning);
       return;
     }
@@ -505,7 +505,7 @@ class ModelController extends GetxController {
     try {
       isImporting.value = true;
       importFileName.value = model.filename;
-      importStatus.value = 'Starting download...';
+      importStatus.value = '正在开始下载…';
       importCopiedBytes.value = 0;
       importTotalBytes.value = 0;
       importBytesPerSecond.value = 0;
@@ -518,7 +518,7 @@ class ModelController extends GetxController {
       externalDownloadId.value = result?['downloadId'] as int?;
       final filename = result?['filename'] as String? ?? model.filename;
       showToast(
-        'Download Started',
+        '已开始下载',
         '$filename is downloading to your Downloads folder.',
         tone: ToastTone.info,
       );
@@ -526,16 +526,16 @@ class ModelController extends GetxController {
       isImporting.value = false;
       externalDownloadId.value = null;
       Get.find<AppLogService>().error(
-        'Download to Downloads failed',
+        '下载到下载目录失败',
         details: '${e.code}: ${e.message}',
       );
-      showToast('Download Failed', e.message ?? e.code, tone: ToastTone.error);
+      showToast('下载失败', e.message ?? e.code, tone: ToastTone.error);
     } catch (e) {
       isImporting.value = false;
       externalDownloadId.value = null;
       Get.find<AppLogService>()
-          .error('Download to Downloads failed', details: e);
-      showToast('Download Failed', '$e', tone: ToastTone.error);
+          .error('下载到下载目录失败', details: e);
+      showToast('下载失败', '$e', tone: ToastTone.error);
     }
   }
 
@@ -546,7 +546,7 @@ class ModelController extends GetxController {
         await _androidImportChannel
             .invokeMethod('cancelDownloadToDownloads', {'downloadId': id});
       } catch (e) {
-        Get.find<AppLogService>().error('Cancel download failed', details: e);
+        Get.find<AppLogService>().error('取消下载失败', details: e);
       }
       externalDownloadId.value = null;
       isImporting.value = false;
@@ -597,7 +597,7 @@ class ModelController extends GetxController {
 
   Future<void> loadModel(String filename) async {
     if (_inference.isLoadingModel.value) {
-      showToast('Model Loading', 'Another model is already loading.',
+      showToast('Model Loading', '另一个模型正在加载。',
           tone: ToastTone.warning);
       return;
     }
@@ -615,7 +615,7 @@ class ModelController extends GetxController {
     final isLiteRt = filename.toLowerCase().endsWith('.litertlm') ||
         model?.runtime == AiModel.runtimeLiteRt;
     // Switching runtimes (LiteRT <-> GGUF) only needs the current engine
-    // unloaded first; the load sheet below offers "Unload & continue".
+    // unloaded first; the load sheet below offers "卸载并继续".
     final fileBytes = await _modelFileBytes(filename, path, model);
     if (model != null && _isIncompleteCatalogFile(model, fileBytes)) {
       final actual = DownloadService.formatBytes(fileBytes);
@@ -638,7 +638,7 @@ class ModelController extends GetxController {
         details: '$filename failed safetensors header validation',
       );
       showToast(
-        'Corrupt Model File',
+        '模型文件损坏',
         '$filename did not download correctly. Delete it and download again.',
         tone: ToastTone.error,
         duration: const Duration(seconds: 6),
@@ -651,7 +651,7 @@ class ModelController extends GetxController {
         details: '$filename failed LiteRT file validation; size=$fileBytes',
       );
       showToast(
-        'Corrupt Model File',
+        '模型文件损坏',
         '$filename is not a valid LiteRT-LM file. Delete it and download again.',
         tone: ToastTone.error,
         duration: const Duration(seconds: 6),
@@ -720,7 +720,7 @@ class ModelController extends GetxController {
 
       final isError = !_localImage.isModelLoaded.value;
       showToast(
-        isError ? 'Model Not Loaded' : 'Image Model',
+        isError ? '模型未加载' : '图像模型',
         result,
         tone: isError ? ToastTone.warning : ToastTone.success,
         duration:
@@ -756,13 +756,13 @@ class ModelController extends GetxController {
             ? (!fallbackToText && model != null && isVisionModel(model))
             : _inference.ggufVisionLoaded;
         if (visionNote.isNotEmpty) {
-          showToast('Model Loaded', '$result$visionNote',
+          showToast('模型已加载', '$result$visionNote',
               tone: ToastTone.info, duration: const Duration(seconds: 5));
           await _settings.setInferenceMode('local');
           return;
         }
         await _settings.setInferenceMode('local');
-        showToast('Model Loaded', result, tone: ToastTone.success);
+        showToast('模型已加载', result, tone: ToastTone.success);
       } else {
         _showLoadFailedSheet(filename, result);
       }
@@ -889,7 +889,7 @@ class ModelController extends GetxController {
     final ramLabel = availableBytes > 0
         ? '${hasLoadedModel && loadedBytes > 0 ? '~' : ''}'
             '${DownloadService.formatWholeMb(availableBytes)}'
-        : 'Unknown';
+        : '未知';
     final lower = filename.toLowerCase();
 
     // For GGUF, estimate real usage from the file's header: weights plus the
@@ -928,15 +928,15 @@ class ModelController extends GetxController {
       warning =
           'This can crash the app if Android cannot reserve enough memory for the model.';
     } else {
-      warning = 'Loading local models can use more memory than the file size.';
+      warning = '加载本地模型占用的内存可能超过文件大小。';
     }
     final runtimeLabel = isLiteRt
         ? 'LiteRT-LM'
         : lower.endsWith('.gguf')
             ? 'GGUF'
             : lower.endsWith('.safetensors')
-                ? 'Image model'
-                : 'Local model';
+                ? '图像模型'
+                : '本地模型';
 
     final warningSerious = (gguf != null && !fits) ||
         isCriticallyLow ||
@@ -955,7 +955,7 @@ class ModelController extends GetxController {
           : hasLoadedModel
               ? 'Switch model?'
               : isCriticallyLow
-                  ? 'Restart recommended'
+                  ? '建议重启'
                   : 'Load model?',
       subtitle: filename,
       builder: (ctx) {
@@ -968,16 +968,16 @@ class ModelController extends GetxController {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppGroup(children: [
-              _detailRow(ctx, 'Runtime', runtimeLabel),
+              _detailRow(ctx, '运行时', runtimeLabel),
               _detailRow(
                   ctx,
-                  hasLoadedModel ? 'Available after unload' : 'Available RAM',
+                  hasLoadedModel ? '卸载后可用' : '可用内存',
                   ramLabel),
-              _detailRow(ctx, 'Model size', modelLabel),
+              _detailRow(ctx, '模型大小', modelLabel),
               if (gguf != null && estimatedBytes != null)
                 _detailRow(
                   ctx,
-                  'Estimated memory',
+                  '预计内存占用',
                   DownloadService.formatWholeMb(estimatedBytes),
                   note: 'Context '
                       '${DownloadService.formatWholeMb(gguf.kvCacheBytes(contextTokens))} '
@@ -1009,21 +1009,21 @@ class ModelController extends GetxController {
                 Expanded(
                   child: TonalButton.neutral(
                     ctx,
-                    label: 'Cancel',
+                    label: '取消',
                     onTap: () => pop(_ModelLoadAction.cancel),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryButton(
-                    label: 'Unload & continue',
+                    label: '卸载并继续',
                     onPressed: () => pop(_ModelLoadAction.unloadAndContinue),
                   ),
                 ),
               ])
             else ...[
               PrimaryButton(
-                label: 'Continue',
+                label: '继续',
                 onPressed: () async {
                   await _refreshAvailableRamGb();
                   pop(_ModelLoadAction.continueLoad);
@@ -1044,7 +1044,7 @@ class ModelController extends GetxController {
                 const SizedBox(height: 10),
                 TonalButton.neutral(
                   ctx,
-                  label: 'Restart app',
+                  label: '重启应用',
                   onTap: () async {
                     pop(_ModelLoadAction.cancel);
                     try {
@@ -1058,7 +1058,7 @@ class ModelController extends GetxController {
               const SizedBox(height: 10),
               TonalButton.neutral(
                 ctx,
-                label: 'Cancel',
+                label: '取消',
                 onTap: () => pop(_ModelLoadAction.cancel),
               ),
             ],
@@ -1091,7 +1091,7 @@ class ModelController extends GetxController {
                 'GPU can make LiteRT models much faster, closer to Edge Gallery speed. '
                 'On some phones GPU/OpenCL can crash the app while loading. '
                 'If that happens, Auto Fast will use CPU on the next load.',
-            confirmLabel: 'Continue',
+            confirmLabel: '继续',
           );
 
     if (confirmed == true) {
@@ -1120,7 +1120,7 @@ class ModelController extends GetxController {
 
   Future<void> importModelFromStorage() async {
     if (isImporting.value) {
-      showToast('Import in Progress', 'Wait for the current import to finish.',
+      showToast('正在导入', '请等待当前导入完成。',
           tone: ToastTone.warning);
       return;
     }
@@ -1159,7 +1159,7 @@ class ModelController extends GetxController {
                 ? 0
                 : await file.length();
         if (totalBytes <= 0) {
-          showToast('Import Failed', 'The selected file is empty.',
+          showToast('导入失败', 'The selected file is empty.',
               tone: ToastTone.error);
           return;
         }
@@ -1167,7 +1167,7 @@ class ModelController extends GetxController {
         final sourceStream = picked.readStream ?? file?.openRead();
         if (sourceStream == null) {
           showToast(
-            'Import Failed',
+            '导入失败',
             'Unable to read the selected file. Try selecting it from local storage.',
             tone: ToastTone.error,
           );
@@ -1190,7 +1190,7 @@ class ModelController extends GetxController {
 
         isImporting.value = true;
         importFileName.value = filename;
-        importStatus.value = 'Copying to app storage...';
+        importStatus.value = '正在复制到应用存储…';
         importCopiedBytes.value = 0;
         importTotalBytes.value = totalBytes;
         importBytesPerSecond.value = 0;
@@ -1209,7 +1209,7 @@ class ModelController extends GetxController {
         await refreshDownloaded();
         modelScope.value = 'local';
         importStatus.value = 'Import complete';
-        showToast('Import Successful', 'Model $filename imported.',
+        showToast('导入成功', 'Model $filename imported.',
             tone: ToastTone.success);
       }
     } catch (e) {
@@ -1220,7 +1220,7 @@ class ModelController extends GetxController {
         }
       }
       Get.find<AppLogService>().error('Model import failed', details: e);
-      showToast('Import Failed', '$e', tone: ToastTone.error);
+      showToast('导入失败', '$e', tone: ToastTone.error);
     } finally {
       isImporting.value = false;
       importFileName.value = '';
@@ -1254,19 +1254,19 @@ class ModelController extends GetxController {
             await _download.getModelSize(filename);
         await refreshDownloaded();
         modelScope.value = 'local';
-        showToast('Import Successful', 'Model $filename imported.',
+        showToast('导入成功', 'Model $filename imported.',
             tone: ToastTone.success);
       }
     } on PlatformException catch (e) {
       Get.find<AppLogService>().error(
-        'Android model import failed',
+        '模型导入失败',
         details: '${e.code}: ${e.message}',
       );
-      showToast('Import Failed', e.message ?? e.code, tone: ToastTone.error);
+      showToast('导入失败', e.message ?? e.code, tone: ToastTone.error);
     } catch (e) {
       Get.find<AppLogService>()
-          .error('Android model import failed', details: e);
-      showToast('Import Failed', '$e', tone: ToastTone.error);
+          .error('模型导入失败', details: e);
+      showToast('导入失败', '$e', tone: ToastTone.error);
     } finally {
       isImporting.value = false;
       importFileName.value = '';
@@ -1297,7 +1297,7 @@ class ModelController extends GetxController {
           .toList();
     } on PlatformException catch (e) {
       Get.find<AppLogService>()
-          .error('Folder scan failed', details: '${e.code}: ${e.message}');
+          .error('文件夹扫描失败', details: '${e.code}: ${e.message}');
       showToast('Couldn\'t read folder', e.message ?? e.code,
           tone: ToastTone.error);
       return null;
@@ -1309,7 +1309,7 @@ class ModelController extends GetxController {
   Future<void> importFolderFiles(List<FolderModelFile> files) async {
     if (files.isEmpty) return;
     if (isImporting.value) {
-      showToast('Import in Progress', 'Wait for the current import to finish.',
+      showToast('正在导入', '请等待当前导入完成。',
           tone: ToastTone.warning);
       return;
     }
@@ -1320,7 +1320,7 @@ class ModelController extends GetxController {
     try {
       for (final file in files) {
         importFileName.value = file.name;
-        importStatus.value = 'Copying to app storage...';
+        importStatus.value = '正在复制到应用存储…';
         importCopiedBytes.value = 0;
         importTotalBytes.value = file.size;
         importBytesPerSecond.value = 0;
@@ -1335,18 +1335,18 @@ class ModelController extends GetxController {
           imported++;
         } on PlatformException catch (e) {
           failed.add(file.name);
-          Get.find<AppLogService>().error('Folder import failed',
+          Get.find<AppLogService>().error('文件夹导入失败',
               details: '${file.name} · ${e.code}: ${e.message}');
         }
       }
       await refreshDownloaded();
       modelScope.value = 'local';
       if (failed.isEmpty) {
-        showToast('Import Successful',
+        showToast('导入成功',
             imported == 1 ? '1 model imported.' : '$imported models imported.',
             tone: ToastTone.success);
       } else {
-        showToast('Some imports failed',
+        showToast('部分导入失败',
             '$imported imported · couldn\'t import ${failed.join(', ')}',
             tone: ToastTone.warning);
       }
@@ -1489,7 +1489,7 @@ class ModelController extends GetxController {
     final friendlyMsg = _getFriendlyErrorMessage(result);
     final context = Get.context;
     if (context == null) {
-      showToast('Model load failed', friendlyMsg,
+      showToast('模型加载失败', friendlyMsg,
           tone: ToastTone.error, duration: const Duration(seconds: 6));
       return;
     }
@@ -1499,7 +1499,7 @@ class ModelController extends GetxController {
     bool showDetails = false;
     showAppSheet<void>(
       context,
-      title: isCluster ? 'Phone cluster couldn\'t load' : 'Model load failed',
+      title: isCluster ? 'Phone cluster couldn\'t load' : '模型加载失败',
       subtitle: friendlyMsg,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) {
@@ -1507,7 +1507,7 @@ class ModelController extends GetxController {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SectionHeader('Troubleshooting tips',
+              const SectionHeader('排错建议',
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
               if (isCluster) ...[
                 _buildTipRow(ctx, Icons.hub_outlined,
@@ -1516,13 +1516,13 @@ class ModelController extends GetxController {
                     'Keep every device on the same Wi-Fi. iPads must keep PrivateLM open.'),
               ] else ...[
                 _buildTipRow(ctx, Icons.delete_outline_rounded,
-                    'Delete the model and try redownloading it completely.'),
+                    '请删除模型后重新完整下载。'),
                 _buildTipRow(ctx, Icons.memory_rounded,
-                    'Ensure your device has at least 2-3 GB of free RAM.'),
+                    '请确保设备至少有 2-3 GB 空闲内存。'),
               ],
               if (showLiteRtTip)
                 _buildTipRow(ctx, Icons.tune_rounded,
-                    'Double check if this LiteRT-LM file matches your architecture.'),
+                    '请确认该 LiteRT-LM 文件与设备架构匹配。'),
               const SizedBox(height: 4),
               Align(
                 alignment: Alignment.centerLeft,
@@ -1537,8 +1537,8 @@ class ModelController extends GetxController {
                       children: [
                         Text(
                           showDetails
-                              ? 'Hide technical details'
-                              : 'Show technical details',
+                              ? '隐藏技术详情'
+                              : '显示技术详情',
                           style: t.label.copyWith(color: t.text),
                         ),
                         const SizedBox(width: 2),
@@ -1582,7 +1582,7 @@ class ModelController extends GetxController {
               ),
               const SizedBox(height: 20),
               TonalButton.neutral(ctx,
-                  label: 'Close', onTap: () => Navigator.pop(ctx)),
+                  label: '关闭', onTap: () => Navigator.pop(ctx)),
             ],
           );
         },

@@ -33,7 +33,7 @@ class DocumentExtractorService {
         return utf8.decode(bytes, allowMalformed: true);
       default:
         throw UnsupportedError(
-          'Document extraction not supported for .$extension files',
+          '不支持解析该文档：$extension files',
         );
     }
   }
@@ -57,7 +57,7 @@ class DocumentExtractorService {
 
     final documentFile = archive.files.firstWhere(
       (f) => f.name == 'word/document.xml',
-      orElse: () => throw Exception('Invalid DOCX: word/document.xml not found'),
+      orElse: () => throw Exception('DOCX 缺少 document.xml'),
     );
 
     final xmlString = utf8.decode(documentFile.content as List<int>);

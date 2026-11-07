@@ -43,7 +43,7 @@ void main() {
     }
     appLogBuffer.clear();
 
-    appLog.info('App started');
+    appLog.info('应用已启动');
 
     // Initialize Firebase before any Firebase-dependent services
     try {
@@ -70,14 +70,14 @@ void main() {
     await Get.putAsync(() => HiveService().init().timeout(
           const Duration(seconds: 10),
           onTimeout: () {
-            appLog.error('HiveService.init timed out');
+            appLog.error('数据库初始化超时');
             return HiveService();
           },
         ));
     await Get.putAsync(() => DeviceInfoService().init().timeout(
           const Duration(seconds: 10),
           onTimeout: () {
-            appLog.error('DeviceInfoService.init timed out');
+            appLog.error('设备信息服务初始化超时');
             return DeviceInfoService();
           },
         ));
@@ -95,7 +95,7 @@ void main() {
     final crashReporting = await Get.putAsync(() => CrashReportingService().init().timeout(
           const Duration(seconds: 10),
           onTimeout: () {
-            appLog.error('CrashReportingService.init timed out');
+            appLog.error('崩溃上报服务初始化超时');
             return CrashReportingService();
           },
         ));
@@ -103,7 +103,7 @@ void main() {
       FlutterError.presentError(details);
       appLog.error(
         details.exceptionAsString(),
-        details: details.stack?.toString() ?? 'No stack',
+        details: details.stack?.toString() ?? '无调用栈',
       );
       crashReporting.recordFlutterFatal(details);
     };
@@ -122,10 +122,10 @@ void main() {
     } catch (e) {
       appLog.error('[Notifications] Init failed', details: e);
     }
-    appLog.info('Notifications initialized');
+    appLog.info('通知已初始化');
     Get.put(ServerController(), permanent: true);
     Get.put(ModelController());
-    appLog.info('All services initialized, launching app');
+    appLog.info('服务初始化完成，正在启动');
 
     // Auto-configure inference settings based on device RAM
     _autoConfigureForDevice();

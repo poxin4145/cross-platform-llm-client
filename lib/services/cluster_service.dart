@@ -146,7 +146,7 @@ class ClusterService extends GetxService {
     if (next == role) return;
     if (next != ClusterRole.worker && role == ClusterRole.worker) {
       if (workerStopsWithApp) {
-        showToast('Still sharing', 'Close PrivateLM to stop sharing this device.');
+        showToast('Still sharing', '关闭 PrivateLM 可停止共享本机。');
         return;
       }
       await stopWorker();
@@ -214,7 +214,7 @@ class ClusterService extends GetxService {
     try {
       worker.value = await LlamaCluster.workerStatus();
     } catch (e) {
-      Get.find<AppLogService>().error('Cluster worker status failed', details: e);
+      Get.find<AppLogService>().error('节点状态获取失败', details: e);
     }
   }
 
@@ -364,7 +364,7 @@ class ClusterService extends GetxService {
     final available = workers.where((w) => !offline.any((o) => o.endpoint == w.endpoint)).toList();
     if (offline.isNotEmpty) {
       final names = offline.map((w) => w.model ?? w.name).join(', ');
-      showToast('Phone cluster', 'Not reachable, loading without: $names');
+      showToast('手机集群', 'Not reachable, loading without: $names');
     }
 
     final modelMb = await File(modelPath).length() / (1024 * 1024);
@@ -474,12 +474,12 @@ class ClusterService extends GetxService {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PrimaryButton(
-            label: 'Load on this phone only',
+            label: '仅在本机加载',
             icon: Icons.smartphone_rounded,
             onPressed: () => Navigator.pop(ctx, true),
           ),
           const SizedBox(height: 10),
-          TonalButton.neutral(ctx, label: 'Cancel', onTap: () => Navigator.pop(ctx, false)),
+          TonalButton.neutral(ctx, label: '取消', onTap: () => Navigator.pop(ctx, false)),
         ],
       ),
     );
@@ -492,7 +492,7 @@ class ClusterService extends GetxService {
     if (context == null) return false;
     final share = await showAppSheet<bool>(
       context,
-      title: 'This model fits on this phone',
+      title: '该模型适合本机运行',
       subtitle: '${model.replaceAll(RegExp(r'\.gguf$'), '')} needs about '
           '${_gb(modelMb)}, and this phone has room for it. Running it here '
           'is faster, because sharing sends every word over Wi-Fi. Share it '
@@ -501,7 +501,7 @@ class ClusterService extends GetxService {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PrimaryButton(
-            label: 'Load on this phone only',
+            label: '仅在本机加载',
             icon: Icons.smartphone_rounded,
             onPressed: () => Navigator.pop(ctx, false),
           ),
@@ -534,7 +534,7 @@ class ClusterService extends GetxService {
     final fileMb = await File(modelPath).length() / (1024 * 1024);
     final remoteMb = remote.values.fold<double>(0, (a, b) => a + b);
     split.assignAll([
-      ClusterShare(deviceName.isEmpty ? 'This phone' : deviceName,
+      ClusterShare(deviceName.isEmpty ? '本机' : deviceName,
           math.max(0, fileMb - remoteMb), isThisPhone: true),
       for (final e in remote.entries) ClusterShare(e.key, e.value),
     ]);

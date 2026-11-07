@@ -197,15 +197,15 @@ class AttachmentPreview extends StatelessWidget {
   String _labelForType(String type) {
     switch (type) {
       case 'image':
-        return 'Image';
+        return '图片';
       case 'pdf':
         return 'PDF';
       case 'audio':
-        return 'Audio';
+        return '音频';
       case 'text':
-        return 'Text file';
+        return '文本文件';
       default:
-        return 'Attachment';
+        return '附件';
     }
   }
 

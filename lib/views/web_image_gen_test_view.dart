@@ -73,7 +73,7 @@ class _WebImageGenTestViewState extends State<WebImageGenTestView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Model', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey)),
+            Text('模型', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey)),
             Text('CyberRealistic-LCM (WebGPU → Metal on Apple)',
                 style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w500)),
             const SizedBox(height: 16),

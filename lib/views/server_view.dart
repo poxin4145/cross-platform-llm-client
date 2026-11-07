@@ -18,7 +18,7 @@ class ServerView extends GetView<ServerController> {
 
     return Scaffold(
       backgroundColor: t.bg,
-      appBar: appScreenBar(context, title: 'Server'),
+      appBar: appScreenBar(context, title: '服务'),
       body: Obx(() {
         final isRunning = controller.isRunning.value;
         final isStarting = controller.isStarting.value;
@@ -37,29 +37,29 @@ class ServerView extends GetView<ServerController> {
             ],
 
             // ── Model ──
-            const SectionHeader('Model'),
+            const SectionHeader('模型'),
             AppGroup(children: [
               AppRow(
                 icon: Icons.memory_rounded,
                 title: controller.modelName,
                 subtitle: controller.hasLocalModel
-                    ? 'Loaded on this device'
-                    : 'Load a GGUF or LiteRT-LM model to serve it',
+                    ? '已加载到本机'
+                    : '加载模型后即可对外提供服务',
                 trailing: controller.hasLocalModel
-                    ? AppTag('Ready', color: t.green)
-                    : AppTag('Not loaded', color: t.orange),
+                    ? AppTag('就绪', color: t.green)
+                    : AppTag('未加载', color: t.orange),
               ),
             ]),
 
             // ── Access ──
-            const SectionHeader('Access'),
+            const SectionHeader('访问'),
             AppGroup(children: [
               AppRow(
                 icon: Icons.lan_outlined,
-                title: 'Allow network access',
+                title: '允许网络访问',
                 subtitle: allowNetwork
-                    ? 'Reachable from other devices on your network'
-                    : 'Only apps on this device can connect',
+                    ? '局域网内其他设备可访问'
+                    : '仅本机应用可连接',
                 trailing: Switch(
                   value: allowNetwork,
                   onChanged:
@@ -68,10 +68,10 @@ class ServerView extends GetView<ServerController> {
               ),
               AppRow(
                 icon: Icons.key_outlined,
-                title: 'Require API key',
+                title: '需API密钥',
                 subtitle: allowNetwork
-                    ? 'Always on while network access is enabled'
-                    : 'Clients send Authorization: Bearer <key>',
+                    ? '开启网络访问时始终启用'
+                    : '客户端需发送 Bearer 密钥',
                 trailing: Switch(
                   value: controller.requiresApiKey,
                   onChanged:
@@ -81,10 +81,10 @@ class ServerView extends GetView<ServerController> {
             ]),
             const SizedBox(height: 12),
             AppField(
-              label: 'API key',
+              label: '密钥',
               helper: controller.requiresApiKey
-                  ? 'Required for every request.'
-                  : 'Optional. Only checked when "Require API key" is on.',
+                  ? '每次请求都需要。'
+                  : '可选，仅在要求密钥时检查。',
               child: TextField(
                 controller: controller.apiKeyCtrl,
                 onChanged: controller.onApiKeyEdited,
@@ -94,10 +94,10 @@ class ServerView extends GetView<ServerController> {
                 enableSuggestions: false,
                 decoration: appInputDecoration(
                   context,
-                  hint: controller.requiresApiKey ? 'Required' : 'Optional',
+                  hint: controller.requiresApiKey ? '必填' : '可选',
                   suffix: Row(mainAxisSize: MainAxisSize.min, children: [
                     IconButton(
-                      tooltip: 'Generate key',
+                      tooltip: '生成密钥',
                       visualDensity: VisualDensity.compact,
                       onPressed: () {
                         Haptics.lightImpact();
@@ -108,7 +108,7 @@ class ServerView extends GetView<ServerController> {
                     ),
                     _CopyButton(
                       text: hasKey ? controller.apiKey.value : null,
-                      tooltip: 'Copy key',
+                      tooltip: '复制密钥',
                     ),
                     const SizedBox(width: 4),
                   ]),
@@ -118,11 +118,11 @@ class ServerView extends GetView<ServerController> {
 
             // ── Endpoints ──
             if (isRunning) ...[
-              const SectionHeader('Endpoints'),
+              const SectionHeader('接口'),
               AppGroup(children: [
-                _UrlRow(label: 'Base URL', url: controller.localUrl.value),
+                _UrlRow(label: '基础地址', url: controller.localUrl.value),
                 _UrlRow(
-                    label: 'OpenAI base URL',
+                    label: '接口地址',
                     url: controller.localUrl.value == null
                         ? null
                         : controller.openAiBaseUrl),
@@ -131,15 +131,15 @@ class ServerView extends GetView<ServerController> {
               _HealthTest(baseUrl: controller.localUrl.value),
 
               // ── Examples ──
-              const SectionHeader('Usage examples'),
+              const SectionHeader('用法示例'),
               _CodeBlock(
-                title: 'List models',
+                title: '列出模型',
                 lang: 'curl',
                 code: 'curl ${controller.baseUrl}/v1/models${_authHeader()}',
               ),
               const SizedBox(height: 12),
               _CodeBlock(
-                title: 'Chat completion',
+                title: '对话补全',
                 lang: 'curl',
                 code:
                     'curl ${controller.baseUrl}/v1/chat/completions \\\n  -H "Content-Type: application/json"${_authHeader()} \\\n  -d \'{"model":"${controller.inference.loadedModelName.value}","messages":[{"role":"user","content":"Hello"}]}\'',
@@ -193,10 +193,10 @@ class _StatusHero extends StatelessWidget {
           : 'Serving ${controller.modelName} · this device only';
     } else {
       dot = t.faint;
-      title = 'Stopped';
+      title = '已停止';
       meta = controller.hasLocalModel
           ? 'Expose ${controller.modelName} as an OpenAI-compatible API'
-          : 'Expose a local model as an OpenAI-compatible API';
+          : '把本地模型暴露为 OpenAI 兼容 API';
     }
 
     return AppCard(
@@ -205,7 +205,7 @@ class _StatusHero extends StatelessWidget {
         Row(children: [
           StatusDot(dot, size: 8),
           const SizedBox(width: 8),
-          Text('Local API server', style: t.small),
+          Text('本地API服务', style: t.small),
         ]),
         const SizedBox(height: 10),
         Text(title, style: t.title.copyWith(fontSize: 20, letterSpacing: -0.5)),
@@ -216,7 +216,7 @@ class _StatusHero extends StatelessWidget {
         if (isRunning && !isStarting)
           SizedBox(
             width: double.infinity,
-            child: TonalButton.destructive(context, label: 'Stop server',
+            child: TonalButton.destructive(context, label: '停止服务',
                 onTap: () {
               Haptics.mediumImpact();
               controller.toggleServer(false);
@@ -224,7 +224,7 @@ class _StatusHero extends StatelessWidget {
           )
         else
           PrimaryButton(
-            label: isStarting ? 'Starting…' : 'Start server',
+            label: isStarting ? 'Starting…' : '启动服务',
             icon: Icons.play_arrow_rounded,
             busy: isStarting,
             onPressed: () {
@@ -242,7 +242,7 @@ class _StatusHero extends StatelessWidget {
 class _CopyButton extends StatefulWidget {
   final String? text;
   final String tooltip;
-  const _CopyButton({required this.text, this.tooltip = 'Copy'});
+  const _CopyButton({required this.text, this.tooltip = '复制'});
 
   @override
   State<_CopyButton> createState() => _CopyButtonState();
@@ -276,7 +276,7 @@ class _CopyButtonState extends State<_CopyButton> {
     final t = AppTokens.of(context);
     final enabled = widget.text != null;
     return IconButton(
-      tooltip: _copied ? 'Copied' : widget.tooltip,
+      tooltip: _copied ? '已复制' : widget.tooltip,
       visualDensity: VisualDensity.compact,
       onPressed: enabled ? _copy : null,
       icon: AnimatedSwitcher(
@@ -314,7 +314,7 @@ class _UrlRow extends StatelessWidget {
             Text(label, style: t.small),
             const SizedBox(height: 3),
             Text(
-              url ?? 'Not available',
+              url ?? '不可用',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: t.mono.copyWith(color: url == null ? t.faint : t.text),
@@ -380,7 +380,7 @@ class _HealthTestState extends State<_HealthTest> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         PillButton(
-          label: _busy ? 'Testing…' : 'Test connection',
+          label: _busy ? 'Testing…' : '测试连接',
           icon: Icons.network_check_rounded,
           onPressed: widget.baseUrl == null || _busy ? null : _run,
         ),
@@ -436,7 +436,7 @@ class _CodeBlock extends StatelessWidget {
             const SizedBox(width: 8),
             AppTag(lang),
             const Spacer(),
-            _CopyButton(text: code, tooltip: 'Copy snippet'),
+            _CopyButton(text: code, tooltip: '复制片段'),
           ]),
         ),
         Container(height: 0.5, color: t.hairline),

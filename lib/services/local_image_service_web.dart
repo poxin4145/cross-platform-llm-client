@@ -145,11 +145,11 @@ class LocalImageService extends GetxService {
 
   Future<String> loadModel(String modelPath,
       {String? modelName, String? taesdPath}) async {
-    if (isLoadingModel.value) return 'ERROR: Model is already loading.';
-    if (isModelLoaded.value) return 'WebGPU engine already ready.';
+    if (isLoadingModel.value) return '错误：模型正在加载。';
+    if (isModelLoaded.value) return 'WebGPU 引擎已就绪。';
 
     _syncReadyState();
-    if (isModelLoaded.value) return 'WebGPU engine already ready.';
+    if (isModelLoaded.value) return 'WebGPU 引擎已就绪。';
 
     isLoadingModel.value = true;
     progress.value = 0.0;

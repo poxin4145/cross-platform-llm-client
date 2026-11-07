@@ -21,7 +21,7 @@ class ServerController extends GetxController {
   final isRunning = false.obs;
   final isStarting = false.obs;
   final localUrl = RxnString();
-  final serverStatus = 'Server stopped'.obs;
+  final serverStatus = '服务已停止'.obs;
   final lastError = RxnString();
 
   final useApiKey = false.obs;
@@ -72,14 +72,14 @@ class ServerController extends GetxController {
     if (isRunning.value || isStarting.value) return;
     lastError.value = null;
     if (!hasLocalModel) {
-      lastError.value = 'Load a local GGUF or LiteRT-LM model first.';
-      showToast('Server not started', lastError.value!,
+      lastError.value = '请先加载本地 GGUF 模型';
+      showToast('服务未启动', lastError.value!,
           tone: ToastTone.warning);
       return;
     }
 
     isStarting.value = true;
-    serverStatus.value = 'Starting server...';
+    serverStatus.value = '正在启动服务…';
     await saveSettings();
 
     try {
@@ -91,15 +91,15 @@ class ServerController extends GetxController {
       );
       localUrl.value = _server.localUrl;
       isRunning.value = true;
-      serverStatus.value = 'Server running';
+      serverStatus.value = '服务运行中';
       if (allowNetwork.value && Get.isRegistered<ClusterService>()) {
         Get.find<ClusterService>().serving.value = true;
       }
     } catch (e) {
       lastError.value = '$e';
-      serverStatus.value = 'Server failed';
-      Get.find<AppLogService>().error('API server failed', details: e);
-      showToast('Server failed', '$e', tone: ToastTone.error);
+      serverStatus.value = '服务启动失败';
+      Get.find<AppLogService>().error('API服务失败', details: e);
+      showToast('服务启动失败', '$e', tone: ToastTone.error);
     } finally {
       isStarting.value = false;
     }
@@ -110,7 +110,7 @@ class ServerController extends GetxController {
     await _server.stop();
     isRunning.value = false;
     localUrl.value = null;
-    serverStatus.value = 'Server stopped';
+    serverStatus.value = '服务已停止';
     if (Get.isRegistered<ClusterService>()) {
       Get.find<ClusterService>().serving.value = false;
     }
@@ -174,7 +174,7 @@ class ServerController extends GetxController {
 
   Future<void> copyText(String text, String label) async {
     await Clipboard.setData(ClipboardData(text: text));
-    showToast('Copied', '$label copied.', tone: ToastTone.success);
+    showToast('已复制', '$label copied.', tone: ToastTone.success);
   }
 
   String get baseUrl => localUrl.value ?? 'http://localhost:$port';

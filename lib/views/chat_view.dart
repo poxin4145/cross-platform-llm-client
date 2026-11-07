@@ -112,7 +112,7 @@ class ChatView extends GetView<ChatController> {
       titleSpacing: 0,
       leadingWidth: 52,
       leading: IconButton(
-        tooltip: 'Chats',
+        tooltip: '对话',
         onPressed: () {
           FocusManager.instance.primaryFocus?.unfocus();
           Get.find<HomeController>().openSidebar();
@@ -137,7 +137,7 @@ class ChatView extends GetView<ChatController> {
         final info = _modelInfo(context);
         final title =
             controller.sessions.firstWhereOrNull((s) => s.id == sid)?.title ??
-                'Chat';
+                '聊天';
         // Title + model line; tapping opens the model sheet.
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -208,7 +208,7 @@ class ChatView extends GetView<ChatController> {
           // empty sessions.
           if (controller.messages.isEmpty) return const SizedBox(width: 8);
           return IconButton(
-              tooltip: 'New chat',
+              tooltip: '新对话',
               icon: Icon(Icons.edit_square,
                   size: 20, color: isDark ? Colors.white : Colors.black),
               onPressed: () {
@@ -235,7 +235,7 @@ class ChatView extends GetView<ChatController> {
     if (settings.inferenceMode.value != 'local') {
       final m = settings.selectedCloudModelName;
       return (
-        name: m.isEmpty ? 'No model selected' : m,
+        name: m.isEmpty ? '未选择模型' : m,
         meta: 'Cloud · ${providerLabel(settings)}',
         dot: _appleBlue(context),
         canUnload: false,
@@ -253,7 +253,7 @@ class ChatView extends GetView<ChatController> {
       return (
         name: pretty(inf.loadedModelName.value),
         meta: [
-          'Ready',
+          '就绪',
           Get.isRegistered<ClusterService>()
               ? Get.find<ClusterService>().splitSummary ??
                   (inf.isGpuAccelerated.value ? 'GPU' : 'CPU')
@@ -276,7 +276,7 @@ class ChatView extends GetView<ChatController> {
     }
     return (
       name: 'No model loaded',
-      meta: 'Load a model to continue this chat',
+      meta: '加载模型以继续此对话',
       dot: orange,
       canUnload: false,
     );
@@ -335,7 +335,7 @@ class ChatView extends GetView<ChatController> {
                   ),
                 ),
                 const SizedBox(height: 18),
-                Text('Model',
+                Text('模型',
                     style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -366,7 +366,7 @@ class ChatView extends GetView<ChatController> {
                   const SizedBox(height: 22),
                   Row(children: [
                     Expanded(
-                      child: Text('Context',
+                      child: Text('上下文',
                           style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -394,7 +394,7 @@ class ChatView extends GetView<ChatController> {
                   ),
                   if (warn) ...[
                     const SizedBox(height: 8),
-                    Text('Almost full. Start a new chat for best results.',
+                    Text('上下文将满，建议新建对话。',
                         style: GoogleFonts.inter(fontSize: 12.5, color: muted)),
                   ],
                 ],
@@ -410,7 +410,7 @@ class ChatView extends GetView<ChatController> {
                   if (info.canUnload) ...[
                     const SizedBox(width: 10),
                     Expanded(
-                      child: TonalButton.destructive(ctx, label: 'Unload',
+                      child: TonalButton.destructive(ctx, label: '卸载',
                           onTap: () {
                         Navigator.pop(ctx);
                         Get.find<ModelController>().unloadModel();
@@ -725,7 +725,7 @@ class ChatView extends GetView<ChatController> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Batch complete! (${controller.lastBatchImagesBase64.length} images)',
+                        '批量完成！(${controller.lastBatchImagesBase64.length} images)',
                         style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
@@ -739,7 +739,7 @@ class ChatView extends GetView<ChatController> {
                         minimumSize: const Size(0, 32),
                         foregroundColor: Theme.of(context).hintColor,
                       ),
-                      child: const Text('Dismiss'),
+                      child: const Text('忽略'),
                     ),
                     const SizedBox(width: 8),
                     FilledButton.icon(
@@ -750,7 +750,7 @@ class ChatView extends GetView<ChatController> {
                         minimumSize: const Size(0, 32),
                       ),
                       icon: const Icon(Icons.download_rounded, size: 16),
-                      label: const Text('Save All'),
+                      label: const Text('全部保存'),
                     ),
                   ],
                 ),
@@ -791,7 +791,7 @@ class ChatView extends GetView<ChatController> {
                         minimumSize: const Size(0, 32),
                         foregroundColor: Colors.redAccent,
                       ),
-                      child: const Text('Clear'),
+                      child: const Text('清空'),
                     ),
                     const SizedBox(width: 8),
                     FilledButton(
@@ -803,7 +803,7 @@ class ChatView extends GetView<ChatController> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         minimumSize: const Size(0, 32),
                       ),
-                      child: const Text('Start Batch'),
+                      child: const Text('开始批量'),
                     ),
                   ],
                 ),
@@ -889,10 +889,10 @@ class ChatView extends GetView<ChatController> {
                                 color: isDark ? Colors.white : Colors.black),
                             decoration: InputDecoration(
                               hintText: !noModel
-                                  ? 'Ask anything'
+                                  ? '随便问问'
                                   : loadingModel
                                       ? 'Loading model…'
-                                      : 'Load a model to start chatting',
+                                      : '加载模型后开始聊天',
                               hintStyle: GoogleFonts.inter(
                                   fontSize: 15,
                                   color: Theme.of(context).hintColor),
@@ -924,45 +924,45 @@ class ChatView extends GetView<ChatController> {
                             // Testing mode: Populate batch with 15 fresh alternative prompts
                             final testPrompts = [
                               "Portrait of a goth girl with dark makeup, realistic photography, 8k",
-                              "Realistic photo of an elf girl in a forest, cinematic lighting",
-                              "A fluffy orange cat sleeping on a sunny couch, photorealistic",
+                              "森林中的精灵少女，电影级光影，写实",
+                              "阳光沙发上睡觉的橘猫，写实照片",
                               "A handsome man in a sharp suit, realistic portrait, studio lighting",
-                              "A futuristic city street at night, realistic photography",
-                              "A beautiful young woman with freckles, natural sunlight",
-                              "A majestic lion resting in the savanna, highly detailed",
+                              "未来感城市夜景，写实摄影",
+                              "雀斑少女，自然光，唯美人像",
+                              "草原上休憩的雄狮，细节丰富",
                               "An old man with a weathered face, realistic portrait, high detail",
                               "A delicious looking cup of coffee on a wooden table, macro photography",
-                              "A medieval knight holding a sword, realistic cinematic lighting",
-                              "A golden retriever playing fetch, sharp focus, photography",
-                              "A realistic cyberpunk character with neon reflections",
+                              "持剑的中世纪骑士，写实电影级光影",
+                              "玩飞盘的金毛，清晰对焦，摄影",
+                              "赛博朋克角色，霓虹反光，写实风格",
                               "A vintage muscle car driving down a desert highway, photorealistic",
                               "A serene mountain lake at sunrise, realistic landscape photography",
-                              "A close-up of a beautiful eye with detailed iris, macro shot"
+                              "眼睛特写，虹膜细节，微距摄影"
                             ];
                             // Shuffle them before adding
                             testPrompts.shuffle();
                             controller.batchPrompts.clear();
                             controller.batchPrompts.addAll(testPrompts);
-                            showToast('Test mode',
-                                'Added 15 test prompts to the batch.',
+                            showToast('测试模式',
+                                '已添加 15 条测试提示词。',
                                 tone: ToastTone.success);
                           },
                           onTap: () async {
                             final text = controller.textController.text.trim();
                             if (text.isEmpty) return;
                             if (controller.batchPrompts.length >= 20) {
-                              showToast('Batch limit',
-                                  'You can add up to 20 prompts per batch.',
+                              showToast('批量上限',
+                                  '每批最多可添加 20 条提示词。',
                                   tone: ToastTone.warning);
                               return;
                             }
                             if (!controller.batchModeAccepted.value) {
                               final accepted = await confirmSheet(
                                 context,
-                                title: 'Batch generation',
+                                title: '批量生成',
                                 message:
                                     'Generating multiple images back-to-back is demanding. Your device may get warm and use more battery.',
-                                confirmLabel: 'Continue',
+                                confirmLabel: '继续',
                               );
                               if (!accepted) return;
                               controller.acceptBatchMode();
@@ -1178,19 +1178,19 @@ class _AttachButton extends StatelessWidget {
     final items = [
       (
         icon: Icons.photo_camera_outlined,
-        label: 'Camera',
+        label: '相机',
         enabled: allowMedia,
         onTap: onCamera,
       ),
       (
         icon: Icons.photo_outlined,
-        label: 'Photos',
+        label: '照片',
         enabled: allowMedia,
         onTap: onImage,
       ),
       (
         icon: Icons.attach_file_rounded,
-        label: 'Files',
+        label: '文件',
         enabled: true,
         onTap: onFile,
       ),
@@ -1199,7 +1199,7 @@ class _AttachButton extends StatelessWidget {
     showGeneralDialog(
       context: ctx,
       barrierDismissible: true,
-      barrierLabel: 'Close',
+      barrierLabel: '关闭',
       barrierColor: Colors.black.withValues(alpha: dark ? 0.35 : 0.12),
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (dialogCtx, _, __) {
@@ -1269,7 +1269,7 @@ class _AttachButton extends StatelessWidget {
                                             letterSpacing: -0.2,
                                             color: fg)),
                                     if (!it.enabled)
-                                      Text('Needs a vision model',
+                                      Text('需要视觉模型',
                                           style: GoogleFonts.inter(
                                               fontSize: 12, color: muted)),
                                   ]),
@@ -1442,7 +1442,7 @@ class _ImageGenIndicatorState extends State<_ImageGenIndicator>
       ),
       child: Text(
         isCpu
-            ? 'CPU · Slow'
+            ? 'CPU · 慢'
             : backend == Backend.metal
                 ? 'APPLE NPU'
                 : backend.displayName.split(' ').first.toUpperCase(),
@@ -1500,7 +1500,7 @@ class _ImageGenIndicatorState extends State<_ImageGenIndicator>
               dots,
               const SizedBox(height: 10),
               Text(
-                isDone ? 'Decoding image' : 'Generating image',
+                isDone ? '解码图片' : '正在生成图片',
                 style: GoogleFonts.inter(
                   fontSize: 13,
                   color: Theme.of(context).hintColor,
@@ -1583,7 +1583,7 @@ class _ImageGenIndicatorState extends State<_ImageGenIndicator>
                             size: 12, color: Color(0xFFFF3B30)),
                         const SizedBox(width: 4),
                         Text(
-                          'Cancel',
+                          '取消',
                           style: GoogleFonts.inter(
                             fontSize: 11,
                             color: const Color(0xFFFF3B30),

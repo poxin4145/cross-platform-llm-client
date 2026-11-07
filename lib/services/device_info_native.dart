@@ -35,7 +35,7 @@ extension SocFamilyExt on SocFamily {
       case SocFamily.hisilicon:
         return 'Huawei Kirin';
       case SocFamily.unknown:
-        return 'Unknown';
+        return '未知';
     }
   }
 
@@ -58,7 +58,7 @@ extension SocFamilyExt on SocFamily {
       case SocFamily.hisilicon:
         return 'Q4_K_M (recommended)';
       case SocFamily.unknown:
-        return 'Q4_K_M (universal default)';
+        return 'Q4_K_M（通用默认）';
     }
   }
 

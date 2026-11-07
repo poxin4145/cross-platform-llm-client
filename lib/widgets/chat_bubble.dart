@@ -364,7 +364,7 @@ class _CopyButtonState extends State<_CopyButton> {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Copy',
+      message: '复制',
       child: InkResponse(
         onTap: _copy,
         radius: 18,

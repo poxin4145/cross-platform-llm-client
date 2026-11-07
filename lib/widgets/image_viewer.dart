@@ -48,17 +48,17 @@ class _ImageViewerState extends State<ImageViewer> {
       }
       await Gal.putImageBytes(_bytes);
       if (mounted) {
-        showToast('Saved', 'Image saved to gallery',
+        showToast('已保存', '图片已存入相册',
             tone: ToastTone.success, duration: const Duration(seconds: 2));
       }
     } on GalException catch (e) {
       if (mounted) {
-        showToast('Not saved', 'Failed to save image: ${e.type.message}',
+        showToast('未保存', 'Failed to save image: ${e.type.message}',
             tone: ToastTone.error);
       }
     } catch (e) {
       if (mounted) {
-        showToast('Not saved', 'Error saving image: $e', tone: ToastTone.error);
+        showToast('未保存', 'Error saving image: $e', tone: ToastTone.error);
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -74,11 +74,11 @@ class _ImageViewerState extends State<ImageViewer> {
       await file.writeAsBytes(_bytes);
       await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'Generated with PrivateLM',
+        text: 'PrivateLM生成',
       );
     } catch (e) {
       if (mounted) {
-        showToast('Not shared', 'Error sharing image: $e',
+        showToast('未共享', 'Error sharing image: $e',
             tone: ToastTone.error);
       }
     } finally {
@@ -119,20 +119,20 @@ class _ImageViewerState extends State<ImageViewer> {
                   children: [
                     _ChromeButton(
                       icon: Icons.close_rounded,
-                      tooltip: 'Close',
+                      tooltip: '关闭',
                       onTap: () => Navigator.of(context).pop(),
                     ),
                     const Spacer(),
                     _ChromeButton(
                       icon: Icons.file_download_outlined,
-                      tooltip: 'Download',
+                      tooltip: '下载',
                       isLoading: _isSaving,
                       onTap: _download,
                     ),
                     const SizedBox(width: 10),
                     _ChromeButton(
                       icon: Icons.ios_share_rounded,
-                      tooltip: 'Share',
+                      tooltip: '分享',
                       isLoading: _isSharing,
                       onTap: _share,
                     ),

@@ -10,7 +10,7 @@ class ImageGenerationNotificationService {
   static const int _progressNotificationId = 4201;
   static const int _foregroundNotificationId = 4202;
   static const String _channelId = 'image_generation_progress';
-  static const String _channelName = 'Image generation';
+  static const String _channelName = '图像生成';
 
   final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
@@ -33,7 +33,7 @@ class ImageGenerationNotificationService {
           const AndroidNotificationChannel(
             _channelId,
             _channelName,
-            description: 'Progress updates for local image generation',
+            description: '本地图像生成的进度通知',
             importance: Importance.low,
           ),
         );
@@ -49,9 +49,9 @@ class ImageGenerationNotificationService {
         autoStartOnBoot: false,
         isForegroundMode: true,
         notificationChannelId: _channelId,
-        initialNotificationTitle: 'Image generation running',
+        initialNotificationTitle: '图像生成进行中',
         initialNotificationContent:
-            'You can leave the app. We will notify you when it finishes.',
+            '可以离开应用，完成后会通知你。',
         foregroundServiceNotificationId: _foregroundNotificationId,
         foregroundServiceTypes: const [AndroidForegroundType.dataSync],
       ),
@@ -86,7 +86,7 @@ class ImageGenerationNotificationService {
     }
     service.invoke('progress', {'content': details});
     await _showProgress(
-      title: 'Image generation running',
+      title: '图像生成进行中',
       body: '0% · Step 0 of $steps',
       progress: 0,
       maxProgress: steps <= 0 ? 100 : steps,
@@ -109,7 +109,7 @@ class ImageGenerationNotificationService {
         : 'Working$elapsed';
     FlutterBackgroundService().invoke('progress', {'content': body});
     await _showProgress(
-      title: 'Image generation running',
+      title: '图像生成进行中',
       body: body,
       progress: total > 0 ? step.clamp(0, total).toInt() : 0,
       maxProgress: total <= 0 ? 100 : total,
@@ -121,7 +121,7 @@ class ImageGenerationNotificationService {
     if (!Platform.isAndroid) return;
     FlutterBackgroundService().invoke('progress', {'content': 'Decoding image...'});
     await _showProgress(
-      title: 'Finishing image',
+      title: '正在完成图片',
       body: 'Decoding image...',
       progress: 100,
       maxProgress: 100,
@@ -133,13 +133,13 @@ class ImageGenerationNotificationService {
     if (!Platform.isAndroid) return;
     await _notifications.show(
       _progressNotificationId,
-      'Image ready',
+      '图片已就绪',
       'Generation finished in ${_formatDuration(durationMs)}.',
       const NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
-          channelDescription: 'Progress updates for local image generation',
+          channelDescription: '本地图像生成的进度通知',
           importance: Importance.defaultImportance,
           priority: Priority.defaultPriority,
           onlyAlertOnce: true,
@@ -153,13 +153,13 @@ class ImageGenerationNotificationService {
     if (!Platform.isAndroid) return;
     await _notifications.show(
       _progressNotificationId,
-      'Image generation failed',
-      'Open PrivateLM to check the error and try again.',
+      '图像生成失败',
+      '请打开 PrivateLM 查看错误后重试。',
       const NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
-          channelDescription: 'Progress updates for local image generation',
+          channelDescription: '本地图像生成的进度通知',
           importance: Importance.defaultImportance,
           priority: Priority.defaultPriority,
           onlyAlertOnce: true,
@@ -191,7 +191,7 @@ class ImageGenerationNotificationService {
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
-          channelDescription: 'Progress updates for local image generation',
+          channelDescription: '本地图像生成的进度通知',
           importance: Importance.low,
           priority: Priority.low,
           ongoing: true,
@@ -230,9 +230,9 @@ void imageGenerationBackgroundStart(ServiceInstance service) async {
     await service.setAsForegroundService();
     service.on('progress').listen((event) {
       final content = event?['content'] as String? ??
-          'You can leave the app. We will notify you when it finishes.';
+          '可以离开应用，完成后会通知你。';
       service.setForegroundNotificationInfo(
-        title: 'Image generation running',
+        title: '图像生成进行中',
         content: content,
       );
     });

@@ -178,10 +178,10 @@ class _Greeting extends StatelessWidget {
 
   String get _salutation {
     final h = DateTime.now().hour;
-    if (h < 5) return 'Up late?';
-    if (h < 12) return 'Good morning,';
-    if (h < 17) return 'Good afternoon,';
-    return 'Good evening,';
+    if (h < 5) return '这么晚还没睡？';
+    if (h < 12) return '早上好，';
+    if (h < 17) return '下午好，';
+    return '晚上好，';
   }
 
   @override
@@ -192,7 +192,7 @@ class _Greeting extends StatelessWidget {
         const SizedBox(height: 18),
       ],
       Text(
-        "$_salutation\nwhat's on your mind?",
+        "$_salutation\n在想什么呢？",
         textAlign: TextAlign.center,
         style: GoogleFonts.inter(
           fontSize: compact ? 24 : 28,
@@ -228,7 +228,7 @@ String providerLabel(SettingsController s) {
       final n = s.customCloudName.value.trim();
       return n.isEmpty ? 'a custom endpoint' : n;
     default:
-      return 'the cloud';
+      return '云端';
   }
 }
 
@@ -281,10 +281,10 @@ class _ModelCard extends StatelessWidget {
         case _ModelState.cloud:
           final m = settings.selectedCloudModelName;
           icon = Icons.cloud_outlined;
-          title = m.isEmpty ? 'No model selected' : m;
+          title = m.isEmpty ? '未选择模型' : m;
           meta = providerLabel(settings);
           dot = t.accent;
-          action = _ActionChip(t: t, label: 'Change', onTap: _openModels);
+          action = _ActionChip(t: t, label: '更改', onTap: _openModels);
         case _ModelState.loading:
           icon = Icons.memory_rounded;
           title = _prettyModel(inf.loadedModelName.value.isNotEmpty
@@ -298,7 +298,7 @@ class _ModelCard extends StatelessWidget {
           icon = Icons.memory_rounded;
           title = _prettyModel(inf.loadedModelName.value);
           meta = [
-            'Ready',
+            '就绪',
             Get.isRegistered<ClusterService>()
               ? Get.find<ClusterService>().splitSummary ??
                   (inf.isGpuAccelerated.value ? 'GPU' : 'CPU')
@@ -306,7 +306,7 @@ class _ModelCard extends StatelessWidget {
             runtime,
           ].join(' · ');
           dot = t.green;
-          action = _ActionChip(t: t, label: 'Switch', onTap: _openModels);
+          action = _ActionChip(t: t, label: '切换', onTap: _openModels);
         case _ModelState.readyImage:
           final backend = img.currentBackend.value;
           icon = Icons.image_outlined;
@@ -314,14 +314,14 @@ class _ModelCard extends StatelessWidget {
           meta =
               'Ready · Image generation · ${backend == Backend.cpu ? 'CPU' : backend.displayName.split(' ').first}';
           dot = t.green;
-          action = _ActionChip(t: t, label: 'Switch', onTap: _openModels);
+          action = _ActionChip(t: t, label: '切换', onTap: _openModels);
         case _ModelState.noModels:
           icon = Icons.download_rounded;
-          title = 'No model on this device';
-          meta = 'Download one to chat offline';
+          title = '本机没有模型';
+          meta = '下载后即可离线聊天';
           dot = t.orange;
           action = _ActionChip(
-              t: t, label: 'Browse', primary: true, onTap: _openModels);
+              t: t, label: '浏览', primary: true, onTap: _openModels);
         case _ModelState.idle:
           final last =
               models.canLoadLastModel ? models.lastLoadedModelName : '';
@@ -333,10 +333,10 @@ class _ModelCard extends StatelessWidget {
           dot = t.faint;
           action = last.isEmpty
               ? _ActionChip(
-                  t: t, label: 'Choose', primary: true, onTap: _openModels)
+                  t: t, label: '选择', primary: true, onTap: _openModels)
               : _ActionChip(
                   t: t,
-                  label: 'Load',
+                  label: '加载',
                   primary: true,
                   onTap: () {
                     Haptics.lightImpact();
@@ -464,21 +464,21 @@ class _Starter {
 }
 
 const _textStarters = [
-  _Starter(Icons.lightbulb_outline_rounded, 'Explain quantum computing simply',
+  _Starter(Icons.lightbulb_outline_rounded, '简单讲讲量子计算',
       'Explain quantum computing simply, like I\'m new to it.'),
-  _Starter(Icons.mail_outline_rounded, 'Write a polite follow-up email',
+  _Starter(Icons.mail_outline_rounded, '写一封礼貌的跟进邮件',
       'Write a short, polite follow-up email to someone who hasn\'t replied in a week.'),
-  _Starter(Icons.flight_takeoff_rounded, 'Plan a 3-day trip to Tokyo',
-      'Plan a relaxed 3-day trip to Tokyo with food and sightseeing.'),
+  _Starter(Icons.flight_takeoff_rounded, '规划东京三日游',
+      '规划东京三日轻松游，含美食和景点。'),
 ];
 
 const _imageStarters = [
-  _Starter(Icons.landscape_outlined, 'A mountain lake at golden hour',
-      'Mountain lake at golden hour, wide shot, photorealistic'),
-  _Starter(Icons.person_outline_rounded, 'A portrait in soft studio light',
-      'Portrait of a person, soft studio lighting, 85mm, detailed'),
-  _Starter(Icons.brush_outlined, 'A flat editorial illustration',
-      'Flat editorial illustration of a city street, muted palette'),
+  _Starter(Icons.landscape_outlined, '金色时刻的高山湖泊',
+      '金色时刻的高山湖泊，广角写实'),
+  _Starter(Icons.person_outline_rounded, '柔光棚拍的肖像',
+      '人像，柔和棚拍光，85mm，细节丰富'),
+  _Starter(Icons.brush_outlined, '扁平插画风格',
+      '扁平杂志风城市街景，低饱和配色'),
 ];
 
 /// Three tappable prompt pills. Sends right away when a model is ready;
@@ -561,12 +561,12 @@ class _GettingStarted extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const steps = [
-      ('Pick a model', 'Smaller models are faster; larger ones are smarter.'),
-      ('Download it once', 'Usually 0.5–3 GB. Wi-Fi recommended.'),
-      ('Chat offline', 'Runs on this device. No account, no server.'),
+      ('选择模型', '模型越小越快，越大越聪明。'),
+      ('下载一次即可', 'Usually 0.5–3 GB. Wi-Fi recommended.'),
+      ('对话离线', '在本机运行，无需账号和服务器。'),
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('How it works', style: t.sectionLabel),
+      Text('工作原理', style: t.sectionLabel),
       const SizedBox(height: 14),
       for (var i = 0; i < steps.length; i++)
         Padding(

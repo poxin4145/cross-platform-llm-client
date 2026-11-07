@@ -83,7 +83,7 @@ class CloudModelController extends GetxController {
     CloudProviderInfo(
       id: 'openai',
       name: 'OpenAI',
-      description: 'Native OpenAI chat models',
+      description: 'OpenAI 原生模型',
       icon: Icons.auto_awesome,
     ),
     CloudProviderInfo(
@@ -95,19 +95,19 @@ class CloudModelController extends GetxController {
     CloudProviderInfo(
       id: 'google',
       name: 'Google Gemini',
-      description: 'Gemini native API models',
+      description: 'Gemini 原生模型',
       icon: Icons.diamond_outlined,
     ),
     CloudProviderInfo(
       id: 'nvidia',
       name: 'NVIDIA NIM',
-      description: 'OpenAI compatible hosted NIM models',
+      description: 'OpenAI 兼容 NIM 模型',
       icon: Icons.memory_outlined,
     ),
     CloudProviderInfo(
       id: 'custom',
       name: 'Custom API',
-      description: 'Manual OpenAI-compatible endpoint',
+      description: '手动配置 OpenAI 兼容接口',
       icon: Icons.tune,
       supportsFetch: false,
     ),
@@ -199,7 +199,7 @@ class CloudModelController extends GetxController {
   }
 
   String statusLabel(String provider) {
-    return isConfigured(provider) ? 'Connected' : 'Needs Key';
+    return isConfigured(provider) ? '已连接' : 'Needs Key';
   }
 
   List<String> filteredModelsFor(String provider) {
@@ -230,11 +230,11 @@ class CloudModelController extends GetxController {
     final fetchedAt = fetchedAtByProvider[provider];
     if (fetchedAt == null &&
         (modelsByProvider[provider] ?? const <String>[]).isNotEmpty) {
-      return 'Built-in list';
+      return '内置列表';
     }
     if (fetchedAt == null) return 'Not fetched yet';
     final diff = DateTime.now().difference(fetchedAt);
-    if (diff.inMinutes < 1) return 'Updated just now';
+    if (diff.inMinutes < 1) return '刚刚更新';
     if (diff.inHours < 1) return 'Updated ${diff.inMinutes}m ago';
     if (diff.inDays < 1) return 'Updated ${diff.inHours}h ago';
     return 'Updated ${diff.inDays}d ago';
@@ -302,7 +302,7 @@ class CloudModelController extends GetxController {
     await _settings.setCloudModel(provider, normalized);
     await _settings.setInferenceMode('cloud');
     if (!showSnackbar) return;
-    showToast('Cloud Model Active', '$provider · $normalized',
+    showToast('云端模型已启用', '$provider · $normalized',
         tone: ToastTone.success);
   }
 
@@ -353,16 +353,16 @@ class CloudModelController extends GetxController {
     final apiKey = customApiKeyController.text.trim();
     final model = customModelController.text.trim();
 
-    if (baseUrl.isEmpty) return 'Base URL is required.';
+    if (baseUrl.isEmpty) return '需要填写基础地址';
     final uri = Uri.tryParse(baseUrl);
     if (uri == null ||
         !uri.hasScheme ||
         (uri.scheme != 'https' && uri.scheme != 'http') ||
         uri.host.isEmpty) {
-      return 'Enter a valid OpenAI-compatible base URL.';
+      return '请输入有效的 OpenAI 兼容地址。';
     }
-    if (apiKey.isEmpty) return 'API key is required.';
-    if (model.isEmpty) return 'Model ID is required.';
+    if (apiKey.isEmpty) return '需要 API 密钥';
+    if (model.isEmpty) return '需要填写模型 ID';
     return null;
   }
 

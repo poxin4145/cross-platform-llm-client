@@ -621,7 +621,7 @@ class SettingsController extends GetxController {
         text.split('\n').where((l) => l.trim().isNotEmpty).take(8).join('\n');
     await _hive.setSetting(AppConstants.keyStopSequences, list);
     showToast(
-        'Saved',
+        '已保存',
         list.isEmpty
             ? 'Stop sequences cleared.'
             : '${list.length} stop sequence(s) saved.',
@@ -763,7 +763,7 @@ class SettingsController extends GetxController {
     final vendor = imageGpuVendor.value;
     final backend = recommendedImageGpuBackend();
     final vendorLabel = vendor == 'detecting'
-        ? 'Detecting'
+        ? '检测中'
         : vendor == 'unknown'
             ? 'Unknown GPU'
             : vendor.toUpperCase();

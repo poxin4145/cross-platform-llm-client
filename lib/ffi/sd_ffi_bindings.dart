@@ -107,9 +107,9 @@ extension BackendExtension on Backend {
       case Backend.cpu:
         return 'CPU';
       case Backend.vulkan:
-        return 'Vulkan (GPU)';
+        return 'Vulkan（GPU）';
       case Backend.opencl:
-        return 'OpenCL (GPU)';
+        return 'OpenCL（GPU）';
       case Backend.metal:
         return 'Apple NPU';
     }
@@ -358,7 +358,7 @@ class SdFfiBindings {
 
   static void _lookupFunctions() {
     if (_lib == null) {
-      throw StateError('FFI library not loaded. Call initialize() first.');
+      throw StateError('FFI 库未加载，请先初始化。');
     }
 
     setProgressCallback = _lib!.lookupFunction<SdFfiSetProgressCallbackNative,

@@ -41,7 +41,7 @@ class ModelView extends GetView<ModelController> {
       backgroundColor: t.bg,
       appBar: appScreenBar(
         context,
-        title: 'Models',
+        title: '模型',
         actions: [
           Obx(() {
             if (controller.modelScope.value == 'online') {
@@ -49,7 +49,7 @@ class ModelView extends GetView<ModelController> {
             }
             return _TextAction(
               icon: Icons.add_rounded,
-              label: 'Import',
+              label: '导入',
               color: t.accent,
               onTap: controller.isImporting.value
                   ? null
@@ -93,9 +93,9 @@ class ModelView extends GetView<ModelController> {
   Widget _buildScopeToggle(BuildContext context) {
     return Obx(() => AppSegmented<String>(
           items: const [
-            ('local', 'My models'),
-            ('browse', 'Browse'),
-            ('online', 'Cloud'),
+            ('local', '我的模型'),
+            ('browse', '浏览'),
+            ('online', '云端'),
           ],
           selected: controller.modelScope.value,
           onChanged: (value) => controller.modelScope.value = value,
@@ -108,7 +108,7 @@ class ModelView extends GetView<ModelController> {
       final busy =
           controller.isImporting.value || inference.isLoadingModel.value;
       return PillButton(
-        label: 'Import file',
+        label: '导入文件',
         icon: Icons.file_upload_outlined,
         onPressed: busy ? null : () => _showImportSheet(context),
       );
@@ -117,10 +117,10 @@ class ModelView extends GetView<ModelController> {
 
   Widget _buildLocalFilterChips(BuildContext context) {
     final labels = [
-      ('general', 'Chat'),
-      ('image', 'Image'),
-      ('uncensored', 'Uncensored'),
-      ('vision', 'Vision'),
+      ('general', '聊天'),
+      ('image', '图片'),
+      ('uncensored', '无限制'),
+      ('vision', '视觉'),
       if (ModelController.supportsAppleNpu) ('npu', 'Apple NPU'),
     ];
     return Obx(() {
@@ -140,13 +140,13 @@ class ModelView extends GetView<ModelController> {
   void _showImportSheet(BuildContext context) {
     showAppSheet<void>(
       context,
-      title: 'Import model',
-      subtitle: 'Add .gguf, .litertlm or .safetensors files from your phone.',
+      title: '导入模型',
+      subtitle: '从手机添加模型文件',
       builder: (ctx) => AppGroup(dividerIndent: 60, children: [
         AppRow(
           icon: Icons.insert_drive_file_outlined,
-          title: 'Import file',
-          subtitle: 'Choose a single model file',
+          title: '导入文件',
+          subtitle: '请选择单个模型文件',
           chevron: true,
           onTap: () {
             Navigator.pop(ctx);
@@ -156,8 +156,8 @@ class ModelView extends GetView<ModelController> {
         if (controller.supportsFolderImport)
           AppRow(
             icon: Icons.folder_open_rounded,
-            title: 'Import from folder',
-            subtitle: 'Scan a folder and pick the models to add',
+            title: '从文件夹导入',
+            subtitle: '扫描文件夹并选择要添加的模型',
             chevron: true,
             onTap: () {
               Navigator.pop(ctx);
@@ -172,14 +172,14 @@ class ModelView extends GetView<ModelController> {
     final files = await controller.pickModelFolder();
     if (files == null || !context.mounted) return;
     if (files.isEmpty) {
-      showToast('No models found',
-          'That folder has no .gguf, .litertlm or .safetensors files.',
+      showToast('未找到模型',
+          '该文件夹没有支持的模型文件。',
           tone: ToastTone.warning);
       return;
     }
     final chosen = await showAppSheet<List<FolderModelFile>>(
       context,
-      title: 'Models in folder',
+      title: '文件夹中的模型',
       subtitle: '${files.length} ${files.length == 1 ? 'file' : 'files'} found',
       builder: (_) => _FolderImportList(files: files, controller: controller),
     );
@@ -191,11 +191,11 @@ class ModelView extends GetView<ModelController> {
   Widget _buildEmptyLibrary(BuildContext context) {
     return EmptyState(
       icon: Icons.download_rounded,
-      title: 'No models on this phone yet',
-      message: 'Download one from Browse, or import a model file.',
+      title: '本机还没有模型',
+      message: '从浏览中下载，或导入模型文件。',
       action: Wrap(spacing: 8, children: [
         PillButton(
-          label: 'Browse models',
+          label: '浏览模型',
           primary: true,
           onPressed: () => controller.modelScope.value = 'browse',
         ),
@@ -247,7 +247,7 @@ class ModelView extends GetView<ModelController> {
           meta: meta,
           dot: t.green,
           action: PillButton(
-            label: 'Unload',
+            label: '卸载',
             onPressed: busy ? null : () => controller.unloadModel(),
           ),
         ),
@@ -345,7 +345,7 @@ class ModelView extends GetView<ModelController> {
                       IconButton(
                         tooltip: controller.canPauseDownloads
                             ? 'Pause download'
-                            : 'Cancel download',
+                            : '取消下载',
                         onPressed: () {
                           final external =
                               controller.externalDownloadId.value != null &&
@@ -392,7 +392,7 @@ class ModelView extends GetView<ModelController> {
       meta: 'Cloud · $providerName',
       dot: hasSelectedModel ? t.accent : t.faint,
       action: PillButton(
-        label: 'Change',
+        label: '更改',
         onPressed: provider == null
             ? null
             : () {
@@ -502,7 +502,7 @@ class ModelView extends GetView<ModelController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(isDownload ? 'Downloading' : 'Importing',
+                        Text(isDownload ? '下载中' : 'Importing',
                             style: t.bodyStrong),
                         const SizedBox(height: 2),
                         Text(
@@ -517,7 +517,7 @@ class ModelView extends GetView<ModelController> {
                   if (controller.externalDownloadId.value != null)
                     _IconAction(
                       icon: Icons.close_rounded,
-                      tooltip: 'Cancel download',
+                      tooltip: '取消下载',
                       destructive: true,
                       onPressed: controller.cancelExternalDownload,
                     ),
@@ -563,7 +563,7 @@ class ModelView extends GetView<ModelController> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SectionHeader('Providers',
+          const SectionHeader('服务商',
               padding: EdgeInsets.fromLTRB(4, 20, 4, 8)),
           AppGroup(
             dividerIndent: 64,
@@ -596,7 +596,7 @@ class ModelView extends GetView<ModelController> {
     final meta = hasSelectedModel
         ? model
         : canUse
-            ? 'No model selected'
+            ? '未选择模型'
             : cloud.statusLabel(provider.id) == 'Needs Key'
                 ? 'Needs API key'
                 : cloud.statusLabel(provider.id);
@@ -632,7 +632,7 @@ class ModelView extends GetView<ModelController> {
                           ),
                           if (isActive && hasSelectedModel) ...[
                             const SizedBox(width: 8),
-                            AppTag('Active', color: t.accent),
+                            AppTag('启用', color: t.accent),
                           ],
                         ],
                       ),
@@ -764,7 +764,7 @@ class ModelView extends GetView<ModelController> {
                 if (!isCustom)
                   AppRow(
                     icon: Icons.key_outlined,
-                    title: configured ? 'Update API key' : 'Add API key',
+                    title: configured ? 'Update API key' : '添加 API 密钥',
                     subtitle: 'Required before selecting live models',
                     chevron: true,
                     onTap: () {
@@ -780,7 +780,7 @@ class ModelView extends GetView<ModelController> {
                 AppRow(
                   icon:
                       isCustom ? Icons.tune_rounded : Icons.smart_toy_outlined,
-                  title: isCustom ? 'Configure and select' : 'Select model',
+                  title: isCustom ? '配置并选择' : '选择模型',
                   subtitle: isCustom
                       ? 'Set base URL, key, and model ID'
                       : 'Search provider models or enter a model ID',
@@ -834,7 +834,7 @@ class ModelView extends GetView<ModelController> {
                   hint: 'Paste ${provider.name} key',
                   prefix: Icon(Icons.key_outlined, size: 18, color: t.muted),
                   suffix: IconButton(
-                    tooltip: obscureKey.value ? 'Show API key' : 'Hide API key',
+                    tooltip: obscureKey.value ? '显示 API 密钥' : '隐藏 API 密钥',
                     onPressed: () => obscureKey.value = !obscureKey.value,
                     icon: Icon(
                       obscureKey.value
@@ -862,12 +862,12 @@ class ModelView extends GetView<ModelController> {
               children: [
                 Expanded(
                   child: TonalButton.neutral(ctx,
-                      label: 'Cancel', onTap: () => Navigator.pop(ctx)),
+                      label: '取消', onTap: () => Navigator.pop(ctx)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Obx(() => PrimaryButton(
-                        label: isVerifying.value ? 'Verifying' : 'Save key',
+                        label: isVerifying.value ? '校验中' : 'Save key',
                         busy: isVerifying.value,
                         onPressed: () async {
                           final value = keyController.text.trim();
@@ -904,7 +904,7 @@ class ModelView extends GetView<ModelController> {
     final obscureCustomKey = true.obs;
     showAppSheet<void>(
       context,
-      title: 'Custom provider',
+      title: '自定义服务商',
       subtitle:
           'Use any OpenAI-compatible endpoint. Enter the base URL without /chat/completions.',
       builder: (ctx) {
@@ -935,7 +935,7 @@ class ModelView extends GetView<ModelController> {
                               color: t.muted, size: 20),
                           style: t.body,
                           decoration:
-                              _sheetInput(ctx, hint: 'Choose a provider'),
+                              _sheetInput(ctx, hint: '选择服务商'),
                           items: [
                             for (var i = 0; i < profiles.length; i++)
                               DropdownMenuItem(
@@ -958,7 +958,7 @@ class ModelView extends GetView<ModelController> {
                       const SizedBox(width: 8),
                       _SquareIconButton(
                         icon: Icons.add_rounded,
-                        tooltip: 'Add another provider',
+                        tooltip: '添加其他服务商',
                         onTap: cloud.beginNewCustomProfile,
                       ),
                     ],
@@ -984,7 +984,7 @@ class ModelView extends GetView<ModelController> {
             ),
             const SizedBox(height: 14),
             AppField(
-              label: 'Base URL',
+              label: '基础地址',
               child: TextField(
                 controller: cloud.customBaseUrlController,
                 keyboardType: TextInputType.url,
@@ -995,7 +995,7 @@ class ModelView extends GetView<ModelController> {
             ),
             const SizedBox(height: 14),
             AppField(
-              label: 'API key',
+              label: '密钥',
               child: Obx(
                 () => TextField(
                   controller: cloud.customApiKeyController,
@@ -1008,8 +1008,8 @@ class ModelView extends GetView<ModelController> {
                     hint: 'Optional for local servers',
                     suffix: IconButton(
                       tooltip: obscureCustomKey.value
-                          ? 'Show API key'
-                          : 'Hide API key',
+                          ? '显示 API 密钥'
+                          : '隐藏 API 密钥',
                       onPressed: () =>
                           obscureCustomKey.value = !obscureCustomKey.value,
                       icon: Icon(
@@ -1026,7 +1026,7 @@ class ModelView extends GetView<ModelController> {
             ),
             const SizedBox(height: 14),
             AppField(
-              label: 'Model ID',
+              label: '模型 ID',
               child: TextField(
                 controller: cloud.customModelController,
                 autocorrect: false,
@@ -1050,7 +1050,7 @@ class ModelView extends GetView<ModelController> {
               child: Obx(() => _TextAction(
                     label: cloud.customProfileIndex >= 0
                         ? 'Remove selected provider'
-                        : 'Clear form',
+                        : '清空表单',
                     color: t.red,
                     onTap: () async {
                       await cloud.clearCustomProvider();
@@ -1193,7 +1193,7 @@ class ModelView extends GetView<ModelController> {
                       ),
                     _TextAction(
                       icon: Icons.refresh_rounded,
-                      label: 'Refresh',
+                      label: '刷新',
                       busy: isLoading,
                       onTap: isLoading || !canFetch
                           ? null
@@ -1256,7 +1256,7 @@ class ModelView extends GetView<ModelController> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppField(
-              label: 'Model ID',
+              label: '模型 ID',
               child: TextField(
                 controller: textController,
                 autofocus: true,
@@ -1270,12 +1270,12 @@ class ModelView extends GetView<ModelController> {
               children: [
                 Expanded(
                   child: TonalButton.neutral(ctx,
-                      label: 'Cancel', onTap: () => Navigator.pop(ctx)),
+                      label: '取消', onTap: () => Navigator.pop(ctx)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryButton(
-                    label: 'Select',
+                    label: '选择',
                     onPressed: () async {
                       final value = textController.text.trim();
                       if (value.isEmpty) return;
@@ -1371,7 +1371,7 @@ class ModelView extends GetView<ModelController> {
                 )
               else
                 PillButton(
-                  label: canUse ? 'Select' : 'Add key',
+                  label: canUse ? '选择' : '添加密钥',
                   onPressed: select,
                 ),
             ],
@@ -1397,16 +1397,16 @@ class ModelView extends GetView<ModelController> {
         : controller.localFilter.value;
     return [
       if (model.recommendedFor.contains(filter))
-        AppTag('Recommended',
+        AppTag('推荐',
             icon: Icons.star_rounded, color: AppTokens.of(context).accent),
       if (controller.isVisionModel(model))
-        const AppTag('Vision', icon: Icons.visibility_outlined),
+        const AppTag('视觉', icon: Icons.visibility_outlined),
       if (controller.isImageModel(model))
-        const AppTag('Image', icon: Icons.image_outlined),
+        const AppTag('图片', icon: Icons.image_outlined),
       if (controller.isNpuModel(model)) const AppTag('NPU'),
-      if (controller.isUncensoredModel(model)) const AppTag('Uncensored'),
-      if (model.isImported) const AppTag('Imported'),
-      if (model.isCustom) const AppTag('Custom'),
+      if (controller.isUncensoredModel(model)) const AppTag('无限制'),
+      if (model.isImported) const AppTag('已导入'),
+      if (model.isCustom) const AppTag('自定义'),
     ];
   }
 
@@ -1435,7 +1435,7 @@ class ModelView extends GetView<ModelController> {
                 children: [
                   Icon(Icons.sd_storage_outlined, size: 18, color: t.muted),
                   const SizedBox(width: 10),
-                  Expanded(child: Text('Size', style: t.body)),
+                  Expanded(child: Text('大小', style: t.body)),
                   Text(
                     controller.modelSizeLabel(model),
                     style: t.bodyStrong.copyWith(fontFeatures: _tabular),
@@ -1445,7 +1445,7 @@ class ModelView extends GetView<ModelController> {
             ),
             const SizedBox(height: 12),
             AppNotice(
-              'Wi-Fi is recommended. Keep the app open while it downloads.',
+              '建议使用 Wi-Fi，下载时请保持应用打开。',
               icon: Icons.wifi_rounded,
               color: t.orange,
             ),
@@ -1454,12 +1454,12 @@ class ModelView extends GetView<ModelController> {
               children: [
                 Expanded(
                   child: TonalButton.neutral(ctx,
-                      label: 'Cancel', onTap: () => Navigator.of(ctx).pop()),
+                      label: '取消', onTap: () => Navigator.of(ctx).pop()),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryButton(
-                    label: isToDownloadsFolder ? 'Save' : 'Download',
+                    label: isToDownloadsFolder ? '保存' : '下载',
                     onPressed: () {
                       Navigator.of(ctx).pop();
                       if (isToDownloadsFolder) {
@@ -1482,9 +1482,9 @@ class ModelView extends GetView<ModelController> {
       BuildContext context, String filename) async {
     final confirmed = await confirmSheet(
       context,
-      title: 'Delete model?',
+      title: '删除模型？',
       message: '$filename will be permanently removed from this device.',
-      confirmLabel: 'Delete',
+      confirmLabel: '删除',
       destructive: true,
     );
     if (confirmed) await controller.deleteModel(filename);
@@ -1540,10 +1540,10 @@ class ModelView extends GetView<ModelController> {
                   fontWeight: FontWeight.w600,
                   fontFeatures: _tabular));
         } else if (isActive) {
-          primaryAction = AppTag('Loaded', color: t.green);
+          primaryAction = AppTag('已加载', color: t.green);
         } else if (library) {
           primaryAction = _SoftButton(
-            label: 'Load',
+            label: '加载',
             onPressed: disableActions
                 ? null
                 : () => controller.loadModel(actualFilename),
@@ -1552,13 +1552,13 @@ class ModelView extends GetView<ModelController> {
           primaryAction = Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(Icons.check_rounded, size: 15, color: t.muted),
             const SizedBox(width: 4),
-            Text('On phone', style: t.small),
+            Text('在手机上', style: t.small),
           ]);
         }
       } else {
         primaryAction = _RoundIconButton(
           icon: Icons.arrow_downward_rounded,
-          tooltip: 'Download',
+          tooltip: '下载',
           onPressed:
               disableActions ? null : () => _confirmDownload(context, model),
         );
@@ -1573,15 +1573,15 @@ class ModelView extends GetView<ModelController> {
           (
             Icons.save_alt_rounded,
             model.hasVisionProjector
-                ? 'Save to Downloads folder (with vision file)'
-                : 'Save to Downloads folder',
+                ? '保存到下载目录（含视觉文件）'
+                : '保存到下载目录',
             false,
             () => controller.saveToDownloads(model),
           ),
         if (!isCurrentlyDownloading && isDownloaded && !isActive)
           (
             Icons.delete_outline_rounded,
-            'Delete model',
+            '删除模型',
             true,
             () => _confirmDeleteModel(context, actualFilename),
           ),
@@ -1590,14 +1590,14 @@ class ModelView extends GetView<ModelController> {
             model.url.trim().isNotEmpty)
           (
             Icons.save_alt_rounded,
-            'Save to phone Downloads folder',
+            '保存到手机下载目录',
             false,
             () => _confirmDownload(context, model, isToDownloadsFolder: true),
           ),
         if (!isCurrentlyDownloading && !isDownloaded && model.isCustom)
           (
             Icons.playlist_remove_rounded,
-            'Remove from list',
+            '从列表移除',
             true,
             () => _confirmRemoveCustom(context, model),
           ),
@@ -1618,8 +1618,8 @@ class ModelView extends GetView<ModelController> {
         if (runtime == 'LiteRT') 'LiteRT',
         if (variant != null) variant,
         if (!library && controller.isVisionModel(model) && filter != 'vision')
-          'Vision',
-        if (model.isImported) 'Imported',
+          '视觉',
+        if (model.isImported) '已导入',
       ].join(' · ');
       void openDetails() => _showModelDetails(
           context, model, subtitle, secondary, disableActions, primaryAction,
@@ -1662,7 +1662,7 @@ class ModelView extends GetView<ModelController> {
                             ),
                             if (uncensored) ...[
                               const SizedBox(width: 8),
-                              AppTag('Uncensored', color: t.orange),
+                              AppTag('无限制', color: t.orange),
                             ],
                           ]),
                           const SizedBox(height: 3),
@@ -1708,7 +1708,7 @@ class ModelView extends GetView<ModelController> {
 
   _TextAction _sortAction() => _TextAction(
         icon: Icons.swap_vert_rounded,
-        label: controller.sortSmallestFirst.value ? 'By size' : 'By name',
+        label: controller.sortSmallestFirst.value ? '按大小' : '按名称',
         onTap: controller.toggleSort,
       );
 
@@ -1750,9 +1750,9 @@ class ModelView extends GetView<ModelController> {
           _sortAction(),
         ]),
       ),
-      ...group('Chat', chat),
-      ...group('Vision', vision),
-      ...group('Image', image),
+      ...group('聊天', chat),
+      ...group('视觉', vision),
+      ...group('图片', image),
     ];
   }
 
@@ -1763,8 +1763,8 @@ class ModelView extends GetView<ModelController> {
       return [
         const EmptyState(
             icon: Icons.search_off_rounded,
-            title: 'No models here yet',
-            message: 'Try another type.'),
+            title: '这里还没有模型',
+            message: '换个类型试试'),
       ];
     }
     return [
@@ -1780,10 +1780,10 @@ class ModelView extends GetView<ModelController> {
   // ── Featured picks ────────────────────────────────────────────────────
 
   static const _pitch = {
-    'general': 'Best for chat',
-    'vision': 'Understands photos',
-    'uncensored': 'No filters',
-    'image': 'Creates images',
+    'general': '最适合聊天',
+    'vision': '能看图片',
+    'uncensored': '无筛选',
+    'image': '生成图片',
   };
 
   /// Horizontal row of the recommended pick for each type.
@@ -1799,7 +1799,7 @@ class ModelView extends GetView<ModelController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
         padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
-        child: Text('Recommended', style: t.label),
+        child: Text('推荐', style: t.label),
       ),
       SizedBox(
         height: 172,
@@ -1833,7 +1833,7 @@ class ModelView extends GetView<ModelController> {
       } else {
         action = _RoundIconButton(
           icon: Icons.arrow_downward_rounded,
-          tooltip: 'Download',
+          tooltip: '下载',
           onPressed: busy ? null : () => _confirmDownload(context, model),
         );
       }
@@ -1957,7 +1957,7 @@ class ModelView extends GetView<ModelController> {
             if (onLoad != null) ...[
               const SizedBox(height: 18),
               PrimaryButton(
-                label: 'Load model',
+                label: '加载模型',
                 icon: Icons.play_arrow_rounded,
                 onPressed: () {
                   Navigator.pop(ctx);
@@ -1968,7 +1968,7 @@ class ModelView extends GetView<ModelController> {
             if (!downloaded && !disabled) ...[
               const SizedBox(height: 18),
               PrimaryButton(
-                label: 'Download',
+                label: '下载',
                 icon: Icons.arrow_downward_rounded,
                 onPressed: () {
                   Navigator.pop(ctx);
@@ -2046,7 +2046,7 @@ class ModelView extends GetView<ModelController> {
       title: 'Remove from list?',
       message: '${model.name} will be removed from your models. You can add it '
           'again later with the correct URL.',
-      confirmLabel: 'Remove',
+      confirmLabel: '移除',
       destructive: true,
     );
     if (confirmed) await controller.removeCustomModel(model);
@@ -2151,7 +2151,7 @@ class _DownloadRing extends StatelessWidget {
   }
 }
 
-/// Soft accent pill ("Load") for list rows.
+/// Soft accent pill ("加载") for list rows.
 class _SoftButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;

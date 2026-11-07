@@ -16,19 +16,19 @@ class HomeView extends GetView<HomeController> {
     _NavItem(
         icon: Icons.chat_bubble_outline_rounded,
         activeIcon: Icons.chat_bubble_rounded,
-        label: 'Chat'),
+        label: '聊天'),
     _NavItem(
         icon: Icons.layers_outlined,
         activeIcon: Icons.layers_rounded,
-        label: 'Models'),
+        label: '模型'),
     _NavItem(
         icon: Icons.lan_outlined,
         activeIcon: Icons.lan_rounded,
-        label: 'Server'),
+        label: '服务'),
     _NavItem(
         icon: Icons.settings_outlined,
         activeIcon: Icons.settings,
-        label: 'Settings'),
+        label: '设置'),
   ];
 
   bool get _isWide {

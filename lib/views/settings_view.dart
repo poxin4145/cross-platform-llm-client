@@ -26,7 +26,7 @@ class SettingsView extends GetView<SettingsController> {
     final t = AppTokens.of(context);
     return Scaffold(
       backgroundColor: t.bg,
-      appBar: appScreenBar(context, title: 'Settings'),
+      appBar: appScreenBar(context, title: '设置'),
       body: Obx(() {
         final device = Get.find<DeviceInfoService>();
         final showUpdates =
@@ -34,19 +34,19 @@ class SettingsView extends GetView<SettingsController> {
         return ListView(
           padding: kPagePadding,
           children: [
-            const SectionHeader('General',
+            const SectionHeader('通用',
                 padding: EdgeInsets.fromLTRB(4, 8, 4, 8)),
             AppGroup(dividerIndent: 60, children: [
               _navRow(
                 context,
                 icon: Icons.palette_outlined,
-                title: 'Appearance',
+                title: '外观',
                 value: _themeLabel(),
                 builder: (ctx) => _buildAppearanceGroup(ctx),
               ),
               AppRow(
                 icon: Icons.vibration_rounded,
-                title: 'Haptic feedback',
+                title: '触感反馈',
                 trailing: Switch(
                   value: controller.hapticsEnabled.value,
                   onChanged: controller.setHapticsEnabled,
@@ -55,42 +55,42 @@ class SettingsView extends GetView<SettingsController> {
                     .setHapticsEnabled(!controller.hapticsEnabled.value),
               ),
             ]),
-            const SectionHeader('Chat'),
+            const SectionHeader('聊天'),
             AppGroup(dividerIndent: 60, children: [
               _navRow(
                 context,
                 icon: Icons.memory_rounded,
-                title: 'Inference mode',
+                title: '推理模式',
                 value: controller.inferenceMode.value == 'local'
-                    ? 'Local'
-                    : 'Cloud',
+                    ? '本地'
+                    : '云端',
                 builder: (ctx) => _buildInferenceGroup(ctx),
               ),
               _navRow(
                 context,
                 icon: Icons.chat_bubble_outline_rounded,
-                title: 'System prompt',
+                title: '系统提示词',
                 value: controller.globalSystemPrompt.value.trim().isEmpty
-                    ? 'Default'
-                    : 'Custom',
+                    ? '默认'
+                    : '自定义',
                 builder: (ctx) => _buildSystemPromptGroup(ctx),
                 reactive: false,
               ),
               _navRow(
                 context,
                 icon: Icons.tune_rounded,
-                title: 'Model parameters',
+                title: '模型参数',
                 value: controller.temperature.value.toStringAsFixed(2),
                 builder: (ctx) => Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _buildModelParametersGroup(ctx),
-                      const SectionHeader('Stop sequences'),
+                      const SectionHeader('停止词'),
                       _buildStopSequencesGroup(ctx),
                     ]),
               ),
             ]),
-            const SectionHeader('Performance'),
+            const SectionHeader('性能'),
             AppGroup(dividerIndent: 60, children: [
               _navRow(
                 context,
@@ -98,15 +98,15 @@ class SettingsView extends GetView<SettingsController> {
                 title: 'GGUF & LiteRT',
                 value: switch (controller.liteRtPerformanceMode.value) {
                   'gpu_fast' => 'GPU fast',
-                  'cpu_safe' => 'CPU safe',
-                  _ => 'Auto fast',
+                  'cpu_safe' => '仅CPU',
+                  _ => '自动加速',
                 },
                 builder: (ctx) => _buildLiteRtGroup(ctx),
               ),
               _navRow(
                 context,
                 icon: Icons.image_outlined,
-                title: 'Image generation',
+                title: '图像生成',
                 value: controller.imageGenBackend.value == Backend.cpu
                     ? 'CPU'
                     : 'GPU',
@@ -115,11 +115,11 @@ class SettingsView extends GetView<SettingsController> {
               if (Get.isRegistered<ClusterService>())
                 AppRow(
                   icon: Icons.hub_outlined,
-                  title: 'Phone cluster',
+                  title: '手机集群',
                   trailing: Text(
                       switch (Get.find<ClusterService>().role) {
-                        ClusterRole.master => 'Master',
-                        ClusterRole.worker => 'Worker',
+                        ClusterRole.master => '主控',
+                        ClusterRole.worker => '节点',
                         ClusterRole.off => 'Off',
                       },
                       style: AppTokens.of(context).caption.copyWith(fontSize: 14)),
@@ -127,20 +127,20 @@ class SettingsView extends GetView<SettingsController> {
                   onTap: () => Get.to(() => const ClusterView()),
                 ),
             ]),
-            const SectionHeader('About'),
+            const SectionHeader('关于'),
             AppGroup(dividerIndent: 60, children: [
               if (showUpdates) _buildUpdatesRow(context),
               _navRow(
                 context,
                 icon: Icons.smartphone_rounded,
-                title: 'Device',
+                title: '设备',
                 value: '${device.totalRamGB.value.toStringAsFixed(1)} GB RAM',
                 builder: (ctx) => AppGroup(children: [_buildDeviceCard(ctx)]),
                 reactive: false,
               ),
               AppRow(
                 icon: Icons.article_outlined,
-                title: 'Logs',
+                title: '日志',
                 chevron: true,
                 onTap: () => Get.to(() => const LogView()),
               ),
@@ -190,9 +190,9 @@ class SettingsView extends GetView<SettingsController> {
   }
 
   String _themeLabel() => switch (controller.themeMode.value) {
-        ThemeMode.light => 'Light',
-        ThemeMode.dark => 'Dark',
-        ThemeMode.system => 'System',
+        ThemeMode.light => '浅色',
+        ThemeMode.dark => '深色',
+        ThemeMode.system => '系统',
       };
 
   Widget _buildAppearanceGroup(BuildContext context) {
@@ -201,13 +201,13 @@ class SettingsView extends GetView<SettingsController> {
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Theme', style: t.body),
+          Text('主题', style: t.body),
           const SizedBox(height: 10),
           AppSegmented<ThemeMode>(
             items: const [
-              (ThemeMode.light, 'Light'),
-              (ThemeMode.dark, 'Dark'),
-              (ThemeMode.system, 'System'),
+              (ThemeMode.light, '浅色'),
+              (ThemeMode.dark, '深色'),
+              (ThemeMode.system, '系统'),
             ],
             selected: controller.themeMode.value,
             onChanged: (mode) {
@@ -226,14 +226,14 @@ class SettingsView extends GetView<SettingsController> {
     return AppGroup(dividerIndent: 60, children: [
       AppRow(
         icon: Icons.phone_iphone_rounded,
-        title: 'Local (on-device)',
+        title: '本地（设备上）',
         subtitle: _localSubtitle(),
         selected: controller.inferenceMode.value == 'local',
         onTap: () => controller.setInferenceMode('local'),
       ),
       AppRow(
         icon: Icons.cloud_outlined,
-        title: 'Cloud API',
+        title: '云端',
         subtitle: providerLabel(controller),
         selected: controller.inferenceMode.value == 'cloud',
         onTap: () => controller.setInferenceMode('cloud'),
@@ -255,12 +255,12 @@ class SettingsView extends GetView<SettingsController> {
       ),
       _fieldFooter(
         context,
-        note: 'Applies to local and cloud models.',
+        note: '适用于本地和云端模型。',
         onSave: () async {
           await controller.setGlobalSystemPrompt(
               controller.globalSystemPromptController.text);
           if (context.mounted) {
-            _confirmSaved(context, 'System prompt saved');
+            _confirmSaved(context, '系统提示词已保存');
           }
         },
       ),
@@ -285,7 +285,7 @@ class SettingsView extends GetView<SettingsController> {
           await controller
               .setStopSequences(controller.stopSequencesController.text);
           if (context.mounted) {
-            _confirmSaved(context, 'Stop sequences saved');
+            _confirmSaved(context, '停止词已保存');
           }
         },
       ),
@@ -299,17 +299,17 @@ class SettingsView extends GetView<SettingsController> {
     final downloading = updates.state.value == UpdateState.downloading;
     return AppRow(
       icon: Icons.system_update_rounded,
-      title: 'App updates',
+      title: '应用更新',
       trailing: update != null
           ? AppTag(
               downloading
                   ? '${(updates.progress.value * 100).round()}%'
                   : '${update.version} available',
               color: t.accent)
-          : Text('Up to date', style: t.caption.copyWith(fontSize: 14)),
+          : Text('已是最新', style: t.caption.copyWith(fontSize: 14)),
       chevron: true,
       onTap: () => Get.to(() => _SettingsPage(
-          title: 'App updates', builder: (ctx) => _buildUpdatesGroup(ctx))),
+          title: '应用更新', builder: (ctx) => _buildUpdatesGroup(ctx))),
     );
   }
 
@@ -325,14 +325,14 @@ class SettingsView extends GetView<SettingsController> {
     } else if (checked != null) {
       status = 'Up to date · checked ${_ago(checked)}';
     } else {
-      status = 'Not checked yet';
+      status = '尚未检查';
     }
     return AppGroup(dividerIndent: 60, children: [
       AppRow(
         icon: update != null ? Icons.download_rounded : Icons.refresh_rounded,
         title: update != null
             ? 'Update to ${update.version}'
-            : 'Check for updates',
+            : '检查更新',
         subtitle: status,
         trailing: checking
             ? const SizedBox(
@@ -356,8 +356,8 @@ class SettingsView extends GetView<SettingsController> {
       ),
       AppRow(
         icon: Icons.schedule_rounded,
-        title: 'Check automatically',
-        subtitle: 'Look for a new release once a day',
+        title: '自动检查',
+        subtitle: '每天检查一次新版本',
         trailing: Switch(
           value: updates.autoCheck.value,
           onChanged: updates.setAutoCheck,
@@ -391,14 +391,14 @@ class SettingsView extends GetView<SettingsController> {
           ),
         ),
         const SizedBox(width: 12),
-        PillButton(label: 'Save', primary: true, onPressed: onSave),
+        PillButton(label: '保存', primary: true, onPressed: onSave),
       ]),
     );
   }
 
   void _confirmSaved(BuildContext context, String message) {
     FocusScope.of(context).unfocus();
-    showToast('Saved', message, tone: ToastTone.success);
+    showToast('已保存', message, tone: ToastTone.success);
   }
 
   /// Consistent slider row: label left, value right, slider below, then an
@@ -490,9 +490,9 @@ class SettingsView extends GetView<SettingsController> {
 
     String scaleLabel(double v) {
       if (v <= 0.85) return 'XS';
-      if (v <= 0.95) return 'Small';
-      if (v <= 1.05) return 'Recommended';
-      if (v <= 1.15) return 'Large';
+      if (v <= 0.95) return '小';
+      if (v <= 1.05) return '推荐';
+      if (v <= 1.15) return '大';
       if (v <= 1.25) return 'XL';
       return 'XXL';
     }
@@ -506,7 +506,7 @@ class SettingsView extends GetView<SettingsController> {
 
     return _sliderRow(
       context,
-      label: 'Text size',
+      label: '文字大小',
       valueLabel: scaleLabel(v),
       value: v,
       min: min,
@@ -517,7 +517,7 @@ class SettingsView extends GetView<SettingsController> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           marker('XS'),
           marker('Small (default)', on: isDefault),
-          marker('Large'),
+          marker('大'),
         ]),
       ],
     );
@@ -530,10 +530,10 @@ class SettingsView extends GetView<SettingsController> {
       final ram = device.totalRamGB.value.toStringAsFixed(1);
       final (String tierName, String tierHint) =
           switch (device.deviceTier.value) {
-        'low' => ('Low RAM', 'Use small models only'),
+        'low' => ('内存低', '仅使用小模型'),
         'mid' => ('Mid-range', 'Good for 1–3B models'),
         'high' => ('High-end', 'Can run 3–7B models'),
-        'ultra' => ('Ultra', 'Full performance mode'),
+        'ultra' => ('Ultra', '满血性能模式'),
         _ => ('', ''),
       };
       final isLow = device.deviceTier.value == 'low';
@@ -585,13 +585,13 @@ class SettingsView extends GetView<SettingsController> {
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Container(height: 0.5, color: t.hairline),
           ),
-          kv('Available memory',
+          kv('可用内存',
               '${device.availableRamGB.value.toStringAsFixed(1)} GB'),
-          kv('Recommended context', '${device.recommendedContextSize}'),
-          kv('Recommended max tokens', '${device.recommendedMaxTokens}'),
+          kv('推荐上下文', '${device.recommendedContextSize}'),
+          kv('推荐最大 token', '${device.recommendedMaxTokens}'),
           if (soc != platform_info.SocFamily.unknown) ...[
-            kv('Chipset', soc.displayName),
-            kv('Recommended quant', soc.recommendedQuant,
+            kv('芯片', soc.displayName),
+            kv('推荐量化', soc.recommendedQuant,
                 color: quantWarning != null ? t.orange : null),
           ],
           if (quantWarning != null) ...[
@@ -608,7 +608,7 @@ class SettingsView extends GetView<SettingsController> {
     final modes = [
       (
         value: 'auto_fast',
-        title: 'Auto fast',
+        title: '自动加速',
         subtitle:
             "Uses the GPU when supported, CPU if the GPU can't load the model",
         icon: Icons.auto_awesome_outlined
@@ -616,13 +616,13 @@ class SettingsView extends GetView<SettingsController> {
       (
         value: 'gpu_fast',
         title: 'GPU fast',
-        subtitle: 'Always tries the GPU. Fastest, may crash on some devices',
+        subtitle: '始终使用 GPU，最快但可能崩溃',
         icon: Icons.bolt_rounded
       ),
       (
         value: 'cpu_safe',
-        title: 'CPU safe',
-        subtitle: 'CPU only. Most stable, slower',
+        title: '仅CPU',
+        subtitle: '仅用 CPU。最稳定但较慢',
         icon: Icons.shield_outlined
       ),
     ];
@@ -650,18 +650,18 @@ class SettingsView extends GetView<SettingsController> {
     return AppGroup(children: [
       _modelParameterSlider(
         context,
-        label: 'Temperature',
+        label: '温度',
         value: controller.temperature.value,
         min: 0.0,
         max: 2.0,
         divisions: 20,
         safeMax: 1.0,
         onChanged: (v) => controller.setTemperature(v),
-        warning: 'High temperature = unpredictable output!',
+        warning: '温度越高，输出越发散！',
       ),
       _modelParameterSlider(
         context,
-        label: 'Max tokens',
+        label: '上限',
         value: controller.maxTokens.value.toDouble(),
         min: 64,
         max: 4096,
@@ -669,7 +669,7 @@ class SettingsView extends GetView<SettingsController> {
         safeMax: Get.find<DeviceInfoService>().maxSafeTokens.toDouble(),
         onChanged: (v) => controller.setMaxTokens(v.toInt()),
         displayValue: controller.maxTokens.value.toString(),
-        warning: 'Your phone may crash with this value!',
+        warning: '该数值可能导致手机崩溃！',
       ),
       (() {
         final inference = Get.find<InferenceService>();
@@ -693,7 +693,7 @@ class SettingsView extends GetView<SettingsController> {
 
         return _modelParameterSlider(
           context,
-          label: 'Context size',
+          label: '上下文长度',
           value: currentValue,
           min: 512,
           max: maxContext,
@@ -703,7 +703,7 @@ class SettingsView extends GetView<SettingsController> {
           displayValue: currentValue.toInt().toString(),
           warning: isLiteRtActive
               ? 'Context capped at 4096 to prevent driver memory crash for LiteRT models.'
-              : 'Context this large will eat all your RAM!',
+              : '上下文过大会耗尽内存！',
         );
       })(),
     ]);
@@ -743,7 +743,7 @@ class SettingsView extends GetView<SettingsController> {
       onChanged: (v) {
         if (v > safeMax && value <= safeMax) {
           Haptics.heavyImpact();
-          showToast('Above recommended', warning, tone: ToastTone.warning);
+          showToast('超出推荐值', warning, tone: ToastTone.warning);
         } else if (v > safeMax) {
           Haptics.mediumImpact();
         }
@@ -772,7 +772,7 @@ class SettingsView extends GetView<SettingsController> {
       // Steps
       _sliderRow(
         context,
-        label: 'Steps',
+        label: '步骤',
         valueLabel: controller.imageSteps.value.toString(),
         value: stepsValue.clamp(1, 50),
         min: 1,
@@ -783,7 +783,7 @@ class SettingsView extends GetView<SettingsController> {
         onChanged: (v) => controller.setImageSteps(v.toInt()),
         below: [
           if (isOver)
-            AppNotice('More steps = better quality but MUCH slower!',
+            AppNotice('步数越多质量越好，但慢得多！',
                 icon: Icons.warning_amber_rounded, color: t.orange),
         ],
       ),
@@ -793,7 +793,7 @@ class SettingsView extends GetView<SettingsController> {
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Expanded(child: Text('Image size', style: t.body)),
+            Expanded(child: Text('图片尺寸', style: t.body)),
             Text(size == 0 ? 'Auto' : '${size}px',
                 style: t.body.copyWith(color: t.muted, fontFeatures: _tabular)),
           ]),
@@ -839,7 +839,7 @@ class SettingsView extends GetView<SettingsController> {
           if (guard <= 0 || guard >= 2048)
             AppNotice(
                 guard <= 0
-                    ? 'GPU Safety is off. Large models may crash or freeze on GPU.'
+                    ? 'GPU 安全已关闭，大模型可能崩溃或卡死。'
                     : 'High GPU Safety allows larger models on GPU and may crash, freeze, or overheat some phones.',
                 icon: Icons.warning_amber_rounded,
                 color: t.orange),
@@ -850,7 +850,7 @@ class SettingsView extends GetView<SettingsController> {
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Backend', style: t.body),
+          Text('后端', style: t.body),
           const SizedBox(height: 2),
           Text(controller.imageGpuLabel(), style: t.caption),
           const SizedBox(height: 12),
@@ -865,7 +865,7 @@ class SettingsView extends GetView<SettingsController> {
           ),
           if (selectedBackend != Backend.cpu) ...[
             const SizedBox(height: 10),
-            Text('GPU is experimental and only used below GPU Safety size.',
+            Text('GPU 为实验性功能，仅在安全大小内使用。',
                 style: t.small.copyWith(color: t.orange)),
           ],
         ]),

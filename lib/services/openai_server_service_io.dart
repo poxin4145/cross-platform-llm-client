@@ -41,7 +41,7 @@ class OpenAiServerService {
   }) async {
     if (_server != null) return;
     if (allowNetwork && (apiKey == null || apiKey.trim().isEmpty)) {
-      throw ArgumentError('An API key is required for network access.');
+      throw ArgumentError('网络访问需要 API 密钥。');
     }
     updateApiKey(apiKey);
     _onLog = onLog;
@@ -65,7 +65,7 @@ class OpenAiServerService {
     _server = null;
     await server?.close(force: true);
     _busy = false;
-    _onLog?.call('Server stopped');
+    _onLog?.call('服务已停止');
   }
 
   Future<void> _serve(HttpServer server) async {
@@ -340,7 +340,7 @@ class OpenAiServerService {
 
   String? _localModelError(InferenceService inference) {
     if (!inference.isModelLoaded.value) {
-      return 'No local model loaded. Load a GGUF or LiteRT-LM model first.';
+      return '未加载本地模型，请先加载模型。';
     }
     return null;
   }
@@ -395,7 +395,7 @@ class OpenAiServerService {
     }
 
     return _ParsedChatRequest(
-      prompt: lastUserText.isEmpty ? 'Describe this attachment.' : lastUserText,
+      prompt: lastUserText.isEmpty ? '描述这个附件。' : lastUserText,
       systemPrompt: systemParts.isEmpty ? null : systemParts.join('\n'),
       history: history,
       imagePath: imagePath,
@@ -561,7 +561,7 @@ class OpenAiServerService {
     if (inference.stopCount != stopsBefore) {
       sse.event({
         'error': {
-          'message': 'Generation was interrupted',
+          'message': '生成被中断',
           'type': 'interrupted',
         }
       });
@@ -639,13 +639,13 @@ class OpenAiServerService {
     await for (final chunk in request) {
       builder.add(chunk);
       if (builder.length > maxBodyBytes) {
-        throw const HttpException('Request body is too large');
+        throw const HttpException('请求体过大');
       }
     }
     final body = utf8.decode(builder.takeBytes());
     final decoded = jsonDecode(body);
     if (decoded is! Map<String, dynamic>) {
-      throw const FormatException('JSON body must be an object');
+      throw const FormatException('JSON 主体必须是对象');
     }
     return decoded;
   }

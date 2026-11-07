@@ -138,7 +138,7 @@ class LocalImageService extends GetxService {
 
   Future<String> loadModel(String modelPath,
       {String? modelName, String? taesdPath}) async {
-    if (isLoadingModel.value) return 'ERROR: Model is already loading.';
+    if (isLoadingModel.value) return '错误：模型正在加载。';
     if (_nativeJobRunning) {
       return 'ERROR: An image is still generating. Wait for it to finish, '
           'then load the model.';
@@ -192,7 +192,7 @@ class LocalImageService extends GetxService {
             await _hive.setSetting(AppConstants.keyImageModelPath, modelPath);
             await _hive.setSetting(
                 AppConstants.keyImageModelName, loadedModelName.value);
-            return 'Image model loaded successfully.';
+            return '图像模型加载成功。';
           } else {
             isModelLoaded.value = false;
             isLoadingModel.value = false;
@@ -220,7 +220,7 @@ class LocalImageService extends GetxService {
           await _hive.setSetting(AppConstants.keyImageModelPath, modelPath);
           await _hive.setSetting(
               AppConstants.keyImageModelName, loadedModelName.value);
-          return 'Image model loaded successfully.';
+          return '图像模型加载成功。';
         }
       }
 
@@ -251,7 +251,7 @@ class LocalImageService extends GetxService {
       if (useGpu && gpuGuardMb > 0 && modelSizeMb >= gpuGuardMb) {
         useGpu = false;
         print(
-            '[LocalImageService] Model ${modelSizeMb}MB exceeds GPU safety ${gpuGuardMb}MB; using CPU for mobile stability');
+            '[LocalImageService] Model ${modelSizeMb}MB exceeds GPU safety ${gpuGuardMb}MB；为保证稳定改用 CPU');
       }
 
       final requestedBackend = currentBackend.value;
@@ -306,13 +306,13 @@ class LocalImageService extends GetxService {
             AppConstants.keyImageGenBackend, currentBackend.value.index);
         await _hive.setSetting(AppConstants.keyImageGenQuantization,
             currentQuantization.value.index);
-        return 'Image model loaded successfully.';
+        return '图像模型加载成功。';
       }
 
       isModelLoaded.value = false;
       isLoadingModel.value = false;
       Get.find<AppLogService>().error(
-        'Image model load failed',
+        '图像模型加载失败',
         details:
             'All backend candidates failed. model=${modelName ?? modelPath.split('/').last}, vendor=$vendor, sizeMb=$modelSizeMb',
       );
@@ -320,7 +320,7 @@ class LocalImageService extends GetxService {
     } catch (e) {
       isModelLoaded.value = false;
       isLoadingModel.value = false;
-      Get.find<AppLogService>().error('Image model load exception',
+      Get.find<AppLogService>().error('图像模型加载异常',
           details: 'model=${modelName ?? modelPath.split('/').last}, error=$e');
       return 'Could not load this model. Try CyberRealistic, Realistic Vision, or AbsoluteReality - these work reliably on most devices.\n\nTechnical detail: $e';
     }
@@ -331,8 +331,8 @@ class LocalImageService extends GetxService {
     // context (GBs) and can crash, so wait until the job has finished.
     if (_nativeJobRunning) {
       showToast(
-        'Image still generating',
-        'Wait for the current image to finish, then unload the model.',
+        '图片仍在生成',
+        '请等当前图片生成完再卸载模型。',
         tone: ToastTone.warning,
       );
       return;
@@ -534,7 +534,7 @@ class LocalImageService extends GetxService {
       if (result.error != null || result.rgbBytes == null) {
         print('[LocalImageService] Generation failed: ${result.error}');
         Get.find<AppLogService>().error(
-          'Local image generation failed',
+          '本地图像生成失败',
           details:
               'backend=${currentBackend.value.displayName}, model=${loadedModelName.value}, error=${result.error ?? "empty image bytes"}',
         );
@@ -578,7 +578,7 @@ class LocalImageService extends GetxService {
       isGenerating.value = false;
       print('[LocalImageService] Native Generation Error: $e');
       print('[LocalImageService] Stack: $stack');
-      Get.find<AppLogService>().error('Local image generation exception',
+      Get.find<AppLogService>().error('本地图像生成异常',
           details:
               'backend=${currentBackend.value.displayName}, model=${loadedModelName.value}, error=$e');
       return null;

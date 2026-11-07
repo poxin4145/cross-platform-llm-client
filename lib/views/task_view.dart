@@ -25,28 +25,28 @@ class TaskView extends GetView<TaskController> {
           appBar: current == null
               ? appScreenBar(
                   context,
-                  title: 'Tasks',
+                  title: '任务',
                   showBack: Navigator.of(context).canPop(),
                   actions: [
                     AppBarIcon(
                       icon: Icons.add_rounded,
-                      tooltip: 'New task',
+                      tooltip: '新任务',
                       onPressed: () => _showCreateSheet(context),
                     ),
                   ],
                 )
               : appScreenBar(
                   context,
-                  title: 'Task',
+                  title: '任务',
                   leading: IconButton(
-                    tooltip: 'All tasks',
+                    tooltip: '全部任务',
                     icon: Icon(Icons.arrow_back_rounded, color: t.text),
                     onPressed: () => controller.currentTask.value = null,
                   ),
                   actions: [
                     AppBarIcon(
                       icon: Icons.delete_outline_rounded,
-                      tooltip: 'Delete task',
+                      tooltip: '删除任务',
                       onPressed: controller.isExecuting.value
                           ? null
                           : () => _confirmDelete(context, current),
@@ -69,11 +69,11 @@ class TaskView extends GetView<TaskController> {
         child: SingleChildScrollView(
           child: EmptyState(
             icon: Icons.checklist_rounded,
-            title: 'No tasks yet',
+            title: '暂无任务',
             message:
                 'Describe a goal and the model will plan it\ninto steps, then run them for you.',
             action: PrimaryButton(
-              label: 'New task',
+              label: '新任务',
               icon: Icons.add_rounded,
               expand: false,
               onPressed: () => _showCreateSheet(context),
@@ -87,7 +87,7 @@ class TaskView extends GetView<TaskController> {
       padding: kPagePadding,
       children: [
         SectionHeader(
-          'Recent',
+          '最近',
           padding: const EdgeInsets.fromLTRB(4, 12, 4, 8),
           trailing: Text('${controller.tasks.length}',
               style: AppTokens.of(context).small),
@@ -95,7 +95,7 @@ class TaskView extends GetView<TaskController> {
         AppGroup(children: [
           for (final task in controller.tasks) _TaskRow(task: task),
         ]),
-        const SectionFootnote('Swipe a task left to delete it.'),
+        const SectionFootnote('左滑任务可删除。'),
       ],
     );
   }
@@ -156,11 +156,11 @@ class TaskView extends GetView<TaskController> {
             else if (steps.isEmpty)
               const EmptyState(
                 icon: Icons.format_list_bulleted_rounded,
-                title: 'No steps generated',
-                message: 'The model did not return a plan for this goal.',
+                title: '未生成步骤',
+                message: '模型没有为该目标返回计划。',
               )
             else ...[
-              const SectionHeader('Steps'),
+              const SectionHeader('步骤'),
               AppGroup(
                 dividerIndent: 48,
                 children: [
@@ -180,10 +180,10 @@ class TaskView extends GetView<TaskController> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: task.status == 'completed'
-                ? AppNotice('Task completed',
+                ? AppNotice('任务完成',
                     icon: Icons.check_circle_outline_rounded, color: t.green)
                 : PrimaryButton(
-                    label: executing ? 'Running…' : 'Run all steps',
+                    label: executing ? 'Running…' : '运行全部步骤',
                     icon: Icons.play_arrow_rounded,
                     busy: executing,
                     onPressed: () {
@@ -202,8 +202,8 @@ class TaskView extends GetView<TaskController> {
     final textCtrl = TextEditingController();
     showAppSheet<void>(
       context,
-      title: 'New task',
-      subtitle: 'The model will break your goal into steps you can run.',
+      title: '新任务',
+      subtitle: '模型会把目标拆成可执行的步骤。',
       builder: (ctx) {
         void submit() {
           final goal = textCtrl.text.trim();
@@ -215,7 +215,7 @@ class TaskView extends GetView<TaskController> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppField(
-              label: 'Goal',
+              label: '目标',
               child: TextField(
                 controller: textCtrl,
                 autofocus: true,
@@ -231,7 +231,7 @@ class TaskView extends GetView<TaskController> {
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: textCtrl,
               builder: (_, value, __) => PrimaryButton(
-                label: 'Create task',
+                label: '创建任务',
                 onPressed: value.text.trim().isEmpty ? null : submit,
               ),
             ),
@@ -244,9 +244,9 @@ class TaskView extends GetView<TaskController> {
   Future<void> _confirmDelete(BuildContext context, TaskModel task) async {
     final ok = await confirmSheet(
       context,
-      title: 'Delete task?',
-      message: 'This removes the task and its steps.',
-      confirmLabel: 'Delete',
+      title: '删除任务？',
+      message: '将删除该任务及其步骤。',
+      confirmLabel: '删除',
       destructive: true,
     );
     if (!ok) return;
@@ -270,15 +270,15 @@ Widget _statusTag(BuildContext context, String status) {
   final t = AppTokens.of(context);
   switch (status) {
     case 'planning':
-      return const AppTag('Planning');
+      return const AppTag('规划');
     case 'running':
-      return AppTag('Running', color: t.accent);
+      return AppTag('运行中', color: t.accent);
     case 'completed':
-      return AppTag('Completed', color: t.green);
+      return AppTag('已完成', color: t.green);
     case 'failed':
-      return AppTag('Failed', color: t.red);
+      return AppTag('失败', color: t.red);
     default:
-      return const AppTag('Ready');
+      return const AppTag('就绪');
   }
 }
 

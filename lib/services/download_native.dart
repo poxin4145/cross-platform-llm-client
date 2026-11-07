@@ -187,7 +187,7 @@ Future<String> downloadModel({
     }
     if (total > 0 && downloadedBytes > total) {
       await partial.delete();
-      throw Exception('Downloaded file is larger than expected; please retry.');
+      throw Exception('下载文件比预期大，请重试。');
     }
 
     final finalFile = File(savePath);
@@ -206,7 +206,7 @@ Future<String> downloadModel({
     _cancelTokens.remove(filename);
     if (e.type == DioExceptionType.cancel) return 'PAUSED';
     throw Exception(
-        'Download failed: ${e.message}. Tap download again to resume.');
+        'Download failed: ${e.message}。再次点击下载可继续。');
   } catch (e) {
     _cancelTokens.remove(filename);
     rethrow;

@@ -133,7 +133,7 @@ class _GgufReader {
 
   Future<void> _skip(int n) async {
     if (n < 0 || _pos + n > _fileLength) {
-      throw const FormatException('Bad skip');
+      throw const FormatException('跳过异常');
     }
     _pos += n;
   }
@@ -149,7 +149,7 @@ class _GgufReader {
       final view = ByteData.sublistView(_buf);
       while (remaining > 0 && _pos + 8 <= end) {
         final len = view.getUint64(_pos - _bufStart, Endian.little);
-        if (len > 1 << 20) throw const FormatException('String too long');
+        if (len > 1 << 20) throw const FormatException('字符串过长');
         if (_pos + 8 + len > end) break; // needs a refill
         _pos += 8 + len;
         remaining--;
@@ -165,7 +165,7 @@ class _GgufReader {
 
   Future<String> _string() async {
     final len = await _u64();
-    if (len > 1 << 20) throw const FormatException('String too long');
+    if (len > 1 << 20) throw const FormatException('字符串过长');
     await _ensure(len);
     final s = utf8.decode(
         _buf.sublist(_pos - _bufStart, _pos - _bufStart + len),

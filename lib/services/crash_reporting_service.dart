@@ -36,7 +36,7 @@ class CrashReportingService extends GetxService {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       _enabled = true;
       await updateContext(reason: 'startup');
-      log('Crash reporting initialized');
+      log('崩溃上报已初始化');
     } catch (e) {
       _enabled = false;
       // Firebase config is intentionally allowed to be absent in local/dev builds.

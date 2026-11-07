@@ -44,7 +44,7 @@ class _ClusterViewState extends State<ClusterView> {
     final t = AppTokens.of(context);
     return Scaffold(
       backgroundColor: t.bg,
-      appBar: appScreenBar(context, title: 'Phone cluster', showBack: true),
+      appBar: appScreenBar(context, title: '手机集群', showBack: true),
       body: Obx(() {
         final role = cluster.role;
         return ListView(
@@ -54,8 +54,8 @@ class _ClusterViewState extends State<ClusterView> {
             AppSegmented<ClusterRole>(
               items: [
                 (ClusterRole.off, 'Off'),
-                if (ClusterService.canBeMaster) (ClusterRole.master, 'Master'),
-                (ClusterRole.worker, 'Worker'),
+                if (ClusterService.canBeMaster) (ClusterRole.master, '主控'),
+                (ClusterRole.worker, '节点'),
               ],
               selected: role,
               onChanged: cluster.setRole,
@@ -106,11 +106,11 @@ class _ClusterViewState extends State<ClusterView> {
       body = _centered(context, [
         Icon(Icons.error_outline_rounded, size: 40, color: t.red),
         const SizedBox(height: 12),
-        Text('Worker stopped', style: t.bodyStrong),
+        Text('工作节点已停止', style: t.bodyStrong),
         const SizedBox(height: 4),
-        Text(s.error ?? 'Unknown error', style: t.caption, textAlign: TextAlign.center),
+        Text(s.error ?? '未知错误', style: t.caption, textAlign: TextAlign.center),
         const SizedBox(height: 16),
-        PillButton(label: 'Try again', primary: true, onPressed: cluster.startWorker),
+        PillButton(label: '重试', primary: true, onPressed: cluster.startWorker),
       ]);
     } else if (s.peer != null) {
       body = _centered(context, [
@@ -122,8 +122,8 @@ class _ClusterViewState extends State<ClusterView> {
         const SizedBox(height: 20),
         Row(children: [
           Expanded(child: _Stat(label: 'Holding', value: _gb(s.heldMb))),
-          Expanded(child: _Stat(label: 'Free at start', value: _gb(s.ramMb))),
-          Expanded(child: _Stat(label: 'Memory speed', value: '${s.bandwidth.toStringAsFixed(1)} GB/s')),
+          Expanded(child: _Stat(label: '启动时可用', value: _gb(s.ramMb))),
+          Expanded(child: _Stat(label: '内存速度', value: '${s.bandwidth.toStringAsFixed(1)} GB/s')),
         ]),
       ]);
     } else if (!s.running || qr == null) {
@@ -143,7 +143,7 @@ class _ClusterViewState extends State<ClusterView> {
           child: QrImageView(data: qr, size: 220, padding: EdgeInsets.zero),
         ),
         const SizedBox(height: 16),
-        Text('Scan this from the master phone', style: t.bodyStrong),
+        Text('用主控手机扫描此码', style: t.bodyStrong),
         const SizedBox(height: 6),
         Row(mainAxisSize: MainAxisSize.min, children: [
           StatusDot(t.green, size: 8),
@@ -152,8 +152,8 @@ class _ClusterViewState extends State<ClusterView> {
         ]),
         const SizedBox(height: 16),
         Row(children: [
-          Expanded(child: _Stat(label: 'Free memory', value: _gb(s.ramMb))),
-          Expanded(child: _Stat(label: 'Memory speed', value: '${s.bandwidth.toStringAsFixed(1)} GB/s')),
+          Expanded(child: _Stat(label: '空闲内存', value: _gb(s.ramMb))),
+          Expanded(child: _Stat(label: '内存速度', value: '${s.bandwidth.toStringAsFixed(1)} GB/s')),
         ]),
       ]);
     }
@@ -210,7 +210,7 @@ class _ClusterViewState extends State<ClusterView> {
         const AppGroup(children: [
           EmptyState(
             icon: Icons.devices_other_rounded,
-            title: 'No workers yet',
+            title: '暂无工作节点',
             message: 'On each other phone, open Phone cluster, choose Worker, '
                 'then scan the QR code it shows.',
           ),
@@ -228,7 +228,7 @@ class _ClusterViewState extends State<ClusterView> {
               ].join(' · '),
               trailing: IconButton(
                 icon: Icon(Icons.close_rounded, color: t.muted),
-                tooltip: 'Remove',
+                tooltip: '移除',
                 onPressed: () => cluster.remove(w),
               ),
             ),
@@ -239,16 +239,16 @@ class _ClusterViewState extends State<ClusterView> {
         'fastest phones get the biggest share and phones that aren\'t needed '
         'are left out.',
       ),
-      const SectionHeader('Other ways to add'),
+      const SectionHeader('其他添加方式'),
       Row(children: [
         PillButton(
-          label: cluster.isScanning.value ? 'Searching…' : 'Find nearby',
+          label: cluster.isScanning.value ? 'Searching…' : '查找附近',
           icon: Icons.wifi_find_rounded,
           onPressed: cluster.isScanning.value ? null : cluster.scanNearby,
         ),
         const SizedBox(width: 10),
         PillButton(
-          label: 'Enter IP',
+          label: '填IP',
           icon: Icons.keyboard_rounded,
           onPressed: () => _enterIp(context),
         ),
@@ -262,7 +262,7 @@ class _ClusterViewState extends State<ClusterView> {
               title: w.model ?? w.name,
               subtitle: w.endpoint,
               trailing: PillButton(
-                label: 'Add',
+                label: '添加',
                 primary: true,
                 onPressed: () => _report(cluster.addFound(w)),
               ),
@@ -281,7 +281,7 @@ class _ClusterViewState extends State<ClusterView> {
     final ctrl = TextEditingController();
     final input = await showAppSheet<String>(
       context,
-      title: 'Enter worker IP',
+      title: '工作节点IP',
       subtitle: 'Shown under the worker\'s QR code',
       builder: (ctx) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -295,7 +295,7 @@ class _ClusterViewState extends State<ClusterView> {
             onSubmitted: (v) => Navigator.pop(ctx, v),
           ),
           const SizedBox(height: 16),
-          PrimaryButton(label: 'Add', onPressed: () => Navigator.pop(ctx, ctrl.text)),
+          PrimaryButton(label: '添加', onPressed: () => Navigator.pop(ctx, ctrl.text)),
         ],
       ),
     );
@@ -308,7 +308,7 @@ class _ClusterViewState extends State<ClusterView> {
     if (error != null) {
       showToast('Couldn\'t add worker', error, tone: ToastTone.error);
     } else {
-      showToast('Worker added', 'Used the next time you load a GGUF model.',
+      showToast('已加节点', '下次加载 GGUF 模型时生效。',
           tone: ToastTone.success);
     }
   }
@@ -328,7 +328,7 @@ class _SplitCard extends StatelessWidget {
     final total = shares.fold<double>(0, (a, s) => a + s.mb);
     return AppCard(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Loaded model', style: t.bodyStrong),
+        Text('已加载模型', style: t.bodyStrong),
         const SizedBox(height: 2),
         Text('Running on ${shares.length} phones · ${_gb(total)}', style: t.caption),
         const SizedBox(height: 14),
@@ -474,7 +474,7 @@ class _QrScanPageState extends State<_QrScanPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: const Text('Scan worker QR code'),
+        title: const Text('扫描工作节点二维码'),
       ),
       body: Stack(children: [
         MobileScanner(controller: _controller, onDetect: _onDetect),
@@ -493,7 +493,7 @@ class _QrScanPageState extends State<_QrScanPage> {
           right: 24,
           bottom: 48,
           child: Text(
-            'Point at the QR code on the worker phone',
+            '对准工作节点手机上的二维码',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white, fontSize: 15),
           ),

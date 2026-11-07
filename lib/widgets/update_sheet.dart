@@ -7,7 +7,7 @@ import '../core/ui.dart';
 import '../services/update_service.dart';
 import 'chat_bubble.dart';
 
-/// "Update available" sheet: release notes, then download progress and the
+/// "有可用更新" sheet: release notes, then download progress and the
 /// hand-off to the system installer.
 class UpdateSheet extends StatelessWidget {
   const UpdateSheet({super.key});
@@ -33,7 +33,7 @@ class UpdateSheet extends StatelessWidget {
           Expanded(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Update available',
+              Text('有可用更新',
                   style: GoogleFonts.inter(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -82,7 +82,7 @@ class UpdateSheet extends StatelessWidget {
         const SizedBox(height: 16),
         if (updates.needsInstallPermission.value) ...[
           const AppNotice(
-            'Allow PrivateLM to install apps, then come back. '
+            '允许 PrivateLM 安装应用后返回。'
             'The installer opens automatically.',
             icon: Icons.lock_open_rounded,
           ),
@@ -110,7 +110,7 @@ class UpdateSheet extends StatelessWidget {
                       : 'Starting download…',
                   style: t.caption),
             ),
-            PillButton(label: 'Cancel', onPressed: updates.cancelDownload),
+            PillButton(label: '取消', onPressed: updates.cancelDownload),
           ]),
         ] else ...[
           PrimaryButton(
@@ -122,7 +122,7 @@ class UpdateSheet extends StatelessWidget {
           const SizedBox(height: 10),
           Row(children: [
             Expanded(
-              child: TonalButton.neutral(context, label: 'Skip this version',
+              child: TonalButton.neutral(context, label: '跳过此版本',
                   onTap: () {
                 updates.skipVersion(release.version);
                 Navigator.pop(context);
@@ -131,7 +131,7 @@ class UpdateSheet extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: TonalButton.neutral(context,
-                  label: 'Later', onTap: () => Navigator.pop(context)),
+                  label: '稍后', onTap: () => Navigator.pop(context)),
             ),
           ]),
         ],

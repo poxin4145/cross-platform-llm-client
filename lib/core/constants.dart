@@ -86,7 +86,7 @@ class AppConstants {
   static const int defaultImageGenGpuGuardMb = 1843; // 1.8 GB
   static const int defaultImageGenSize = 0; // 0 = Auto recommended
   static const double defaultFontScale =
-      0.95; // 4th slider stop, "Small" default
+      0.95; // 4th slider stop, "小" default
 
   // System Prompt (compact for small context models)
   static const String systemPrompt =
@@ -123,7 +123,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/litert-community/Qwen2.5-1.5B-Instruct/resolve/main/Qwen2.5-1.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm',
       'size': '1.49 GB',
-      'description': 'Balanced LiteRT-LM chat model with int8 quantization',
+      'description': 'int8 量化的均衡 LiteRT-LM 对话模型',
       'template': 'litert',
       'runtime': 'litert',
     },
@@ -134,7 +134,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/litert-community/DeepSeek-R1-Distill-Qwen-1.5B/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B_multi-prefill-seq_q8_ekv4096.litertlm',
       'size': '1.71 GB',
-      'description': 'Reasoning-focused LiteRT-LM model with int8 quantization',
+      'description': '偏重推理的 int8 LiteRT-LM 模型',
       'template': 'litert',
       'runtime': 'litert',
     },
@@ -145,7 +145,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/main/gemma-4-E2B-it.litertlm',
       'size': '2.46 GB',
-      'description': 'Strong general chat LiteRT-LM model from Google Gemma',
+      'description': 'Google Gemma 的强力通用对话模型',
       'template': 'litert',
       'runtime': 'litert',
       'vision': 'true',
@@ -156,7 +156,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm/resolve/main/gemma-4-E4B-it.litertlm',
       'size': '3.40 GB',
-      'description': 'Highest quality LiteRT-LM option; needs about 5 GB RAM',
+      'description': '最高质量 LiteRT-LM，约需 5 GB 内存',
       'template': 'litert',
       'runtime': 'litert',
       'vision': 'true',
@@ -186,7 +186,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/bartowski/Qwen2.5-3B-Instruct-GGUF/resolve/main/Qwen2.5-3B-Instruct-Q4_K_M.gguf',
       'size': '2.1 GB',
-      'description': 'Best balance of speed and quality for mobile',
+      'description': '移动端速度与质量的最佳平衡',
       'template': 'chatml',
     },
     {
@@ -291,7 +291,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/mradermacher/SmolLM2-1.7B-Instruct-Uncensored-GGUF/resolve/main/SmolLM2-1.7B-Instruct-Uncensored.Q4_K_M.gguf',
       'size': '1.1 GB',
-      'description': 'Ultra-compact and unrestricted assistant',
+      'description': '超紧凑的无限制助手',
       'template': 'chatml',
     },
     {
@@ -318,7 +318,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf',
       'size': '0.8 GB',
-      'description': 'Ultra-lightweight text model',
+      'description': '超轻量文本模型',
       'template': 'llama3',
     },
     {
@@ -327,7 +327,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/Lykon/dreamshaper-8-lcm/resolve/main/DreamShaper8_LCM.safetensors',
       'size': '2.0 GB',
-      'description': 'Extremely fast 4-step local image generation',
+      'description': '极快的 4 步本地图像生成',
       'template': 'sd',
     },
     {
@@ -348,7 +348,7 @@ class AppConstants {
           'https://huggingface.co/orailnooor/cyberrealistic-coreml/resolve/main/cyberrealistic.coreml.zip?download=true',
       'size': '2.0 GB',
       'description':
-          'Optimized for Apple devices with M-series chips or 8GB+ RAM',
+          '为 M 系列芯片或 8GB+ 内存的苹果设备优化',
       'template': 'sd',
     },
     {
@@ -367,7 +367,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/SG161222/Realistic_Vision_V5.1_noVAE/resolve/main/Realistic_Vision_V5.1_fp16-no-ema.safetensors',
       'size': '2.0 GB',
-      'description': 'Highly popular photorealistic portrait and scene model',
+      'description': '广受欢迎的写实人像与场景模型',
       'template': 'sd',
     },
     {
@@ -376,7 +376,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/Lykon/AbsoluteReality/resolve/main/AbsoluteReality_1.8.1_pruned.safetensors',
       'size': '2.0 GB',
-      'description': 'Photorealistic general-purpose image generation',
+      'description': '写实风格的通用图像生成',
       'template': 'sd',
     },
     {
@@ -385,7 +385,7 @@ class AppConstants {
       'url':
           'https://huggingface.co/Lykon/AnyLoRA/resolve/main/AnyLoRA_noVae_fp16-pruned.safetensors',
       'size': '2.0 GB',
-      'description': 'Highly versatile Anime / Stylized image generator',
+      'description': '多用途动漫/风格化图像生成模型',
       'template': 'sd',
     },
   ];

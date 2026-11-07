@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 /// App-wide haptic feedback. Every vibration goes through here so the
-/// "Haptic feedback" setting can turn them all off in one place.
+/// "触感反馈" setting can turn them all off in one place.
 class Haptics {
   Haptics._();
 

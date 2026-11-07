@@ -17,26 +17,26 @@ class _LogViewState extends State<LogView> {
   final _filter = 'ALL'.obs;
 
   static const _filters = [
-    ('ALL', 'All'),
-    ('ERROR', 'Errors'),
-    ('WARNING', 'Warnings'),
-    ('INFO', 'Info'),
-    ('DEBUG', 'Debug'),
+    ('ALL', '全部'),
+    ('ERROR', '错误'),
+    ('WARNING', '警告'),
+    ('INFO', '信息'),
+    ('DEBUG', '调试'),
   ];
 
   Future<void> _copy() async {
     await _logs.copyImportantLogs();
     if (!mounted) return;
-    showToast('Copied', 'Important logs copied to the clipboard.',
+    showToast('已复制', '重要日志已复制到剪贴板。',
         tone: ToastTone.success);
   }
 
   Future<void> _clear() async {
     final ok = await confirmSheet(
       context,
-      title: 'Clear logs?',
-      message: 'All captured log entries will be removed.',
-      confirmLabel: 'Clear',
+      title: '清空日志？',
+      message: '所有已捕获日志将被清除。',
+      confirmLabel: '清空',
       destructive: true,
     );
     if (ok) _logs.clear();
@@ -49,17 +49,17 @@ class _LogViewState extends State<LogView> {
       backgroundColor: t.bg,
       appBar: appScreenBar(
         context,
-        title: 'Logs',
+        title: '日志',
         showBack: true,
         actions: [
           Obx(() => AppBarIcon(
                 icon: Icons.copy_rounded,
-                tooltip: 'Copy important logs',
+                tooltip: '复制重要日志',
                 onPressed: _logs.entries.isEmpty ? null : _copy,
               )),
           Obx(() => AppBarIcon(
                 icon: Icons.delete_outline_rounded,
-                tooltip: 'Clear logs',
+                tooltip: '清空日志',
                 onPressed: _logs.entries.isEmpty ? null : _clear,
               )),
         ],
@@ -89,11 +89,11 @@ class _LogViewState extends State<LogView> {
                   child: EmptyState(
                     icon: Icons.check_rounded,
                     title: f == 'ALL'
-                        ? 'No logs yet'
+                        ? '暂无日志'
                         : 'No ${label.toLowerCase()}',
                     message: f == 'ALL'
-                        ? 'Errors, warnings and debug details will appear here.'
-                        : 'Nothing at this level has been captured.',
+                        ? '错误、警告和调试信息将显示在这里。'
+                        : '该级别暂无日志。',
                   ),
                 ),
               );
@@ -134,10 +134,10 @@ class _LogEntryTileState extends State<_LogEntryTile> {
     final hasDetails = e.details != null && e.details!.trim().isNotEmpty;
 
     final (String levelLabel, Color? levelColor) = switch (e.level) {
-      'ERROR' => ('Error', t.red),
-      'WARNING' => ('Warning', t.orange),
-      'INFO' => ('Info', null),
-      'DEBUG' => ('Debug', null),
+      'ERROR' => ('错误', t.red),
+      'WARNING' => ('警告', t.orange),
+      'INFO' => ('信息', null),
+      'DEBUG' => ('调试', null),
       _ => (e.level, null),
     };
 
@@ -161,7 +161,7 @@ class _LogEntryTileState extends State<_LogEntryTile> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(_expanded ? 'Hide details' : 'Show details',
+                Text(_expanded ? '隐藏详情' : '显示详情',
                     style: t.small.copyWith(fontWeight: FontWeight.w600)),
                 const SizedBox(width: 2),
                 AnimatedRotation(

@@ -711,7 +711,7 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
-/// Small pill action (e.g. "Load", "Download") used inside rows and cards.
+/// Small pill action (e.g. "加载", "下载") used inside rows and cards.
 class PillButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -972,7 +972,7 @@ Future<bool> confirmSheet(
     builder: (ctx) => Row(children: [
       Expanded(
         child: TonalButton.neutral(ctx,
-            label: 'Cancel', onTap: () => Navigator.pop(ctx, false)),
+            label: '取消', onTap: () => Navigator.pop(ctx, false)),
       ),
       const SizedBox(width: 10),
       Expanded(

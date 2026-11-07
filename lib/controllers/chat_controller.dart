@@ -371,7 +371,7 @@ class ChatController extends GetxController {
       // Reject unsupported or extension-less files
       if (documentsOnly && (fileType == 'image' || fileType == 'audio')) {
         showToast(
-          'Not supported by this model',
+          '该模型不支持',
           'This model reads text only. Attach a PDF, DOCX, or text/code file.',
           tone: ToastTone.warning,
         );
@@ -380,7 +380,7 @@ class ChatController extends GetxController {
 
       if (extension.isEmpty || fileType == 'file') {
         showToast(
-          'Unsupported file',
+          '不支持的文件',
           'Only images, audio, PDF, DOCX, and text/code files are supported.',
           tone: ToastTone.warning,
         );
@@ -428,7 +428,7 @@ class ChatController extends GetxController {
             selectedFileContent.value = _fitToContext(content);
           } catch (e) {
             Get.find<AppLogService>().warning(
-              'Document extraction failed',
+              '文档解析失败',
               details: e,
             );
             selectedFileContent.value =
@@ -444,8 +444,8 @@ class ChatController extends GetxController {
             _fitToContext(utf8.decode(bytes, allowMalformed: true));
       }
     } catch (e) {
-      Get.find<AppLogService>().warning('File attachment failed', details: e);
-      showToast('File not attached', '$e', tone: ToastTone.error);
+      Get.find<AppLogService>().warning('附件添加失败', details: e);
+      showToast('未附加文件', '$e', tone: ToastTone.error);
     }
   }
 
@@ -549,7 +549,7 @@ class ChatController extends GetxController {
         final granted = await Gal.requestAccess();
         if (!granted) {
           showToast(
-              'Permission Denied', 'Cannot save images without gallery access.',
+              'Permission Denied', '没有相册权限，无法保存图片。',
               tone: ToastTone.error);
           return;
         }
@@ -558,11 +558,11 @@ class ChatController extends GetxController {
         await Gal.putImageBytes(base64Decode(base64));
       }
       showToast(
-          'Success', 'Saved ${lastBatchImagesBase64.length} images to gallery.',
+          '成功', 'Saved ${lastBatchImagesBase64.length} images to gallery.',
           tone: ToastTone.success);
       lastBatchImagesBase64.clear();
     } catch (e) {
-      showToast('Error', 'Failed to save images: $e', tone: ToastTone.error);
+      showToast('错误', 'Failed to save images: $e', tone: ToastTone.error);
     }
   }
 
@@ -888,7 +888,7 @@ class ChatController extends GetxController {
         await Get.find<ImageGenerationNotificationService>().failed();
       }
       imageGenStartTime.value = null;
-      Get.find<AppLogService>().error('Chat response failed', details: e);
+      Get.find<AppLogService>().error('对话回复失败', details: e);
       final errorMsg = ChatMessage(
         id: _uuid.v4(),
         chatId: currentSessionId.value,

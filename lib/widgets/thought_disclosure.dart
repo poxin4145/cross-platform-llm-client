@@ -198,6 +198,6 @@ class _ThoughtDisclosureState extends State<ThoughtDisclosure>
     if (widget.isThinking) {
       return seconds > 0 ? 'Thinking for ${seconds}s…' : 'Thinking…';
     }
-    return seconds > 0 ? 'Thought for ${seconds}s' : 'Thought';
+    return seconds > 0 ? 'Thought for ${seconds}s' : '思考';
   }
 }

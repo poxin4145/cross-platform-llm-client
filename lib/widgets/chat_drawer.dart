@@ -95,19 +95,19 @@ class _ChatDrawerState extends State<ChatDrawer> {
                       fontWeight: FontWeight.w600,
                       color: isDark ? Colors.white : Colors.black)),
               const SizedBox(height: 4),
-              Text('This conversation will be permanently deleted.',
+              Text('此对话将被永久删除。',
                   style: GoogleFonts.inter(
                       fontSize: 13.5, color: Theme.of(ctx).hintColor)),
               const SizedBox(height: 22),
               Row(children: [
                 Expanded(
                   child: TonalButton.neutral(ctx,
-                      label: 'Cancel', onTap: () => Navigator.pop(ctx, false)),
+                      label: '取消', onTap: () => Navigator.pop(ctx, false)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: TonalButton.destructive(ctx,
-                      label: 'Delete', onTap: () => Navigator.pop(ctx, true)),
+                      label: '删除', onTap: () => Navigator.pop(ctx, true)),
                 ),
               ]),
             ],
@@ -125,11 +125,11 @@ class _ChatDrawerState extends State<ChatDrawer> {
     String bucket(DateTime d) {
       final day = DateTime(d.year, d.month, d.day);
       final diff = today.difference(day).inDays;
-      if (diff <= 0) return 'Today';
+      if (diff <= 0) return '今天';
       if (diff == 1) return 'Yesterday';
-      if (diff < 7) return 'Previous 7 days';
-      if (diff < 30) return 'Previous 30 days';
-      return 'Older';
+      if (diff < 7) return '近 7 天';
+      if (diff < 30) return '近 30 天';
+      return '更早';
     }
 
     final out = <(String, List<ChatSession>)>[];
@@ -170,7 +170,7 @@ class _ChatDrawerState extends State<ChatDrawer> {
             padding: const EdgeInsets.fromLTRB(20, 14, 8, 10),
             child: Row(children: [
               Expanded(
-                child: Text('Chats',
+                child: Text('对话',
                     style: GoogleFonts.inter(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
@@ -178,7 +178,7 @@ class _ChatDrawerState extends State<ChatDrawer> {
                         color: text)),
               ),
               IconButton(
-                tooltip: 'New chat',
+                tooltip: '新对话',
                 onPressed: _newChat,
                 icon: Icon(Icons.edit_square, size: 21, color: accent),
               ),
@@ -199,7 +199,7 @@ class _ChatDrawerState extends State<ChatDrawer> {
                 cursorColor: accent,
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
-                  hintText: 'Search',
+                  hintText: '搜索',
                   hintStyle: GoogleFonts.inter(fontSize: 15, color: muted),
                   prefixIcon:
                       Icon(Icons.search_rounded, size: 19, color: muted),

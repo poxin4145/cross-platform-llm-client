@@ -119,7 +119,7 @@ Steps:''';
       final step = steps[i];
       steps[i] = step.copyWith(
         status: 'failed',
-        output: 'Command execution is not available.',
+        output: '当前环境无法执行命令。',
       );
     }
 

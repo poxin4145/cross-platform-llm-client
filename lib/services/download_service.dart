@@ -333,7 +333,7 @@ class DownloadService extends GetxService with WidgetsBindingObserver {
 
   Future<void> _directDownloadAfterStall(
       String url, String filename, DownloadProgress progress) async {
-    progress.status.value = 'Switching to direct download...';
+    progress.status.value = '切换到直接下载…';
     try {
       final result = await _directDownload(url, filename, progress);
       if (result != 'PAUSED') {

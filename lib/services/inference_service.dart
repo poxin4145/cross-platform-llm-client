@@ -67,7 +67,7 @@ class InferenceService extends GetxService {
     if (!supportsLocalInference) {
       return 'ERROR: Local inference is not available on this platform. Use Cloud mode.';
     }
-    if (isLoadingModel.value) return 'ERROR: Model is already loading.';
+    if (isLoadingModel.value) return '错误：模型正在加载。';
 
     if (platform.isRunning32Bit) {
       final lower = modelPath.toLowerCase();
@@ -168,7 +168,7 @@ class InferenceService extends GetxService {
         gpuLayersUsed.value = 0;
         isGpuAccelerated.value = false;
         Get.find<AppLogService>().error(
-          'Local model load failed',
+          '本地模型加载失败',
           details:
               'model=$requestedModelName, runtime=$runtime, backend=${result.backend}, message=${result.message}',
         );
@@ -215,7 +215,7 @@ class InferenceService extends GetxService {
       loadingModelName.value = '';
       modelLoadProgress.value = 0.0;
       loadedBackend.value = '';
-      Get.find<AppLogService>().error('Failed to load local model', details: e);
+      Get.find<AppLogService>().error('加载本地模型失败', details: e);
       return 'ERROR: Failed to load model — $e';
     }
   }
@@ -400,7 +400,7 @@ class InferenceService extends GetxService {
         streamingText.value = '';
         flushTokenBuffer();
       }
-      Get.find<AppLogService>().error('Local generation failed', details: e);
+      Get.find<AppLogService>().error('本地生成失败', details: e);
       return 'ERROR: $e';
     }
   }
