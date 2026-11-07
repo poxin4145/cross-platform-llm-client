@@ -36,6 +36,14 @@ endfunction()
 #  TEST_SHADER_FILE - Path to the test shader file
 #  RESULT_VARIABLE - Name of the variable to set (ON/OFF) based on test result
 function(test_shader_extension_support EXTENSION_NAME TEST_SHADER_FILE RESULT_VARIABLE)
+    # [zh-build] Android NDK 的 glslc 在生成阶段使用 --target-env=vulkan1.2，
+    # 会让 GL_KHR_cooperative_matrix 着色器编译失败（特性检测却用 vulkan1.3 通过）。
+    # 这里直接关闭 cooperative matrix 着色器变体，Vulkan 后端其余功能不受影响。
+    if (EXTENSION_NAME MATCHES "cooperative_matrix")
+        message(STATUS "${EXTENSION_NAME} disabled for Android NDK glslc")
+        set(${RESULT_VARIABLE} OFF PARENT_SCOPE)
+        return()
+    endif()
     execute_process(
         COMMAND ${Vulkan_GLSLC_EXECUTABLE} -o - -fshader-stage=compute --target-env=vulkan1.3 "${TEST_SHADER_FILE}"
         OUTPUT_VARIABLE glslc_output
