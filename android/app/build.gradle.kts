@@ -34,7 +34,8 @@ if (file("google-services.json").exists()) {
 android {
     namespace = "com.orailnoor.privatelm"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // 固定 NDK：NDK 28 的 glslc 会让 llama.cpp 的 Vulkan 着色器编译失败
+    ndkVersion = "27.0.12077973"
 
     packaging {
         jniLibs {

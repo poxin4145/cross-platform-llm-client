@@ -26,6 +26,12 @@ jobs:
       - name: Show versions
         run: flutter --version && java -version
 
+      # NDK 28 的 glslc 会让 llama.cpp 的 Vulkan 着色器编译失败，固定到 27
+      - name: Install NDK 27
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.0.12077973" > /dev/null
+          ls "$ANDROID_HOME/ndk"
+
       # android/app/build.gradle.kts 在 release 构建时强制要求 keystore，
       # 这里生成一个临时签名（每次构建都会变，如需固定签名改成 secrets 注入）
       - name: Generate signing key
@@ -38,7 +44,6 @@ jobs:
             -storepass privatelm123 -keypass privatelm123 \
             -dname "CN=PrivateLM, OU=Dev, O=PrivateLM, L=City, ST=State, C=CN"
           printf 'storeFile=release.jks\nstorePassword=privatelm123\nkeyAlias=privatelm\nkeyPassword=privatelm123\n' > android/key.properties
-          cat android/key.properties
 
       - name: Pub get
         run: flutter pub get
